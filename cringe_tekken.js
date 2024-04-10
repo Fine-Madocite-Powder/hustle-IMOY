@@ -4,8 +4,8 @@ const ctx = canvas.getContext("2d");
 // --- The "anim" object contains all sprites, spritesheets, and information that might be needed to animate the object. ---
 let anim = {
     FireFist: {
-        frameWidth: 12,
-        frameHeight: 18,
+        frameWidth: 72,
+        frameHeight: 108,
         frameCount: 2,
         spriteSheet: document.getElementById("FireFist")
     },
@@ -58,10 +58,10 @@ function update() {
     startTime = performance.now();
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, anim.FireFist.frameWidth * 5, anim.FireFist.frameWidth * 5);
+    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, anim.FireFist.frameWidth, anim.FireFist.frameWidth);
 
 
-    ctx.fillRect(0,0,30,30);
+
 
     
 
