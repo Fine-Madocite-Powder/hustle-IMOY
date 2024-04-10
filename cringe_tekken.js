@@ -1,86 +1,52 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// --- The "anim" object contains all sprites, spritesheets, and information that might be needed to animate the object. ---
-let anim = {
-    FireFist: {
-        frameWidth: 72,
-        frameHeight: 108,
-        frameCount: 1,
-        spriteSheet: document.getElementById("FireFist")
-    },
-    Background: {
-        spriteSheet: document.getElementById("background")
-    },
-    StadingAttack: {
-        frameWidth: 24,
-        frameHeight: 24,
-        frameCount: 2,
-        spriteSheet: document.getElementById("standingAttack")
-    }
+const standingAttack = document.getElementById("standingAttack");
+
+const standingAttackWidth = 24
+const standingAttackHeight = 24
+
+let frameIndex = 0
+const MaxFrames = 8
+
+const scale = 4
+
+let lastTimestamp = 0,
+maxFPS = 15,
+timestep = 1000 / maxFPS // ms for each frame
+
+/**
+* timestamp är en inparameter som skickas in i funktionen av requestAnimationFrame()
+*/
+function draw(timestamp) {
+//if-sats för "throttling". För att det inte ska bli för hög FPS
+if (timestamp - lastTimestamp < timestep) {
+  // Vi ska vänta med att rita så vi avbryter funktionen.
+  requestAnimationFrame(draw)
+  return
+}
+// OK, dags att rita!
+lastTimestamp = timestamp
+
+ctx.clearRect(0, 0, canvas.width, canvas.height) // Tömmer canvasen
+
+// Ritar den frame som är på frameIndex med skalan i scale
+ctx.drawImage(
+  spriteSheet,
+  frameIndex * spriteWidth, // Beräknar framens x-koordinat
+  0, // Framens y-koordinat är alltid 0
+  spriteWidth,
+  spriteHeight,
+  0, // Ritar på x-koordinat 0 på canvas
+  0, // Ritar på y-koordinat 0 på canvas
+  spriteWidth * scale,
+  spriteHeight * scale
+)
+
+// Se till att frameIndex inte blir högre än antalet frames. Börja om på frame 0 i så fall.
+frameIndex = (frameIndex + 1) % totalFrames
+requestAnimationFrame(draw)
 }
 
-let animations = [];
-
-
-// --- The "Player" class contains all information used to move and render both player characters. ---
-class Player {
-    constructor (x, y) {
-        this.health = 12;
-        this.grounded = true;
-        this.doublejump = true;
-        this.velX = 0;
-        this.velY = 0;
-        this.position = {
-            x: x,
-            y: y
-        }
-        this.facesright = true;
-        this.stundur = 0;
-    }
-
-    fallAttack() {
-
-    }
-
-    standAttack() {
-
-    }
-
-    moveAttack(){
-
-    }
-}
-
-let player1 = new Player();
-let player2 = new Player();
-
-
-
-
-let startTime = 0;
-let endTime = 0;
-let deltaTime = 0; // Use deltaTime variable for physics calculations. It is very precise.
-
-function update() {
-    startTime = performance.now();
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(0,0,);
-
-
-
-    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, anim.FireFist.frameWidth, anim.FireFist.frameHeight);
-
-
-
-
-    
-
-    endTime = performance.now();
-    deltaTime = endTime - startTime;
-
-    requestAnimationFrame(update)
-}
-
-requestAnimationFrame(update);
+// Startar animationen när bilden laddats.
+spriteSheet.onload = requestAnimationFrame(draw)
