@@ -6,7 +6,7 @@ let anim = {
     FireFist: {
         frameWidth: 12,
         frameHeight: 18,
-        frameCount: 1,
+        frameCount: 2,
         spriteSheet: document.getElementById("FireFist")
     },
     Background: {
@@ -28,13 +28,14 @@ class Player {
             y: y
         }
         this.facesright = true;
+        this.stundur = 0;
     }
 
     fallAttack() {
 
     }
 
-    standingAttack() {
+    standAttack() {
 
     }
 
@@ -49,22 +50,22 @@ let player2 = new Player();
 
 
 
-//let startTime = 0;
-//let endTime = 0;
+let startTime = 0;
+let endTime = 0;
 let deltaTime = 0; // Use deltaTime variable for physics calculations. It is very precise.
 
 function update() {
-    //startTime = performance.now();
+    startTime = performance.now();
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(anim.Background.spriteSheet, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, canvas.width, canvas.height);
 
 
     
 
-    //ctx.fillRect(20, 0, canvas.width, canvas.height);
+    
 
-    //endTime = performance.now();
+    endTime = performance.now();
     //deltaTime = endTime - startTime;
 
     //requestAnimationFrame(update)
