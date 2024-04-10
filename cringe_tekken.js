@@ -6,13 +6,21 @@ let anim = {
     FireFist: {
         frameWidth: 72,
         frameHeight: 108,
-        frameCount: 2,
+        frameCount: 1,
         spriteSheet: document.getElementById("FireFist")
     },
     Background: {
         spriteSheet: document.getElementById("background")
+    },
+    StadingAttack: {
+        frameWidth: 24,
+        frameHeight: 24,
+        frameCount: 2,
+        spriteSheet: document.getElementById("standingAttack")
     }
 }
+
+let animations = [];
 
 
 // --- The "Player" class contains all information used to move and render both player characters. ---
@@ -58,7 +66,11 @@ function update() {
     startTime = performance.now();
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, anim.FireFist.frameWidth, anim.FireFist.frameWidth);
+    ctx.drawImage(0,0,);
+
+
+
+    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, anim.FireFist.frameWidth, anim.FireFist.frameHeight);
 
 
 
@@ -66,9 +78,9 @@ function update() {
     
 
     endTime = performance.now();
-    //deltaTime = endTime - startTime;
+    deltaTime = endTime - startTime;
 
-    //requestAnimationFrame(update)
+    requestAnimationFrame(update)
 }
 
 requestAnimationFrame(update);
