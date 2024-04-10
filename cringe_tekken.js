@@ -58,10 +58,10 @@ function update() {
     startTime = performance.now();
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(anim.FireFist.spriteSheet, 0, 0, anim.FireFist.frameWidth * 5, anim.FireFist.frameWidth * 5);
 
 
-    
+    ctx.fillRect(0,0,30,30);
 
     
 
