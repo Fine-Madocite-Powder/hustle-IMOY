@@ -1,18 +1,11 @@
 canvas {
     position: fixed; 
     z-index: 2;
-    height: 400px; 
-    width: 700px;
     display: block;
-    margin: auto; 
+    width:50%;
+    image-rendering: pixelated; 
 }
 
-#background {
-    height: 400px;
-    width: 700px;
-    display: block;
-    position: fixed;
-}
 
 img {
     display: none;
