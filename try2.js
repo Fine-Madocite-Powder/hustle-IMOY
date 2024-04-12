@@ -2,6 +2,7 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const background = document.getElementById("background");
 
+
 // "Animations" is an object that stores information about sprites that need to be rendered. It does not 
 const Animations = {
     standingAttack: {
@@ -34,8 +35,8 @@ class Anim {
         this.health = 10;
         this.stoptimer = 0;
         this.velocity = { // The x and y coordinates below determine the direction the player is moving. 
-            x: 1,
-            y: 0
+            x: 0,
+            y: 3
         }
         this.position = { // This object stores the position of the player.
             x: x, // The position is at the bottom left of the player's sprite (at least, that's where it will be rendered from)
@@ -59,6 +60,7 @@ let lastTimestamp = 0,
 maxFPS = 50,
 timestep = 1000 / maxFPS // ms for each frame
 
+const gravity = 0.2 //Gravity so the player falls smoothly//
 function update(timestamp) {
   if (timestamp - lastTimestamp < timestep) {
       // Only continue if one timestep (1000/15 ms) has passed. Otherwise, schedule the next frame and cancel the current update code.
@@ -82,9 +84,42 @@ function update(timestamp) {
 
   ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x, player1.position.y, player1.animator.width, player1.animator.height);
 
-
+  if ((player1.position.y + 24) >= canvas.height) { //Stops the player from falling through the floor by checking if it's position added with the height of the img is larger or equal to the height of the canvas//
+    player1.velocity = 0
+  } else 
+  player1.velocity.y += gravity //Lets the player jump smoothly//
 
   requestAnimationFrame(update)
 }
 requestAnimationFrame(update);
 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+window.addEventListener("keypress", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
+  switch (event.key) { 
+    case "d":
+      player1.velocity.x = 1
+      break;
+    case "w":
+      player1.velocity.y = -10
+      break
+    case "a":
+      player1.velocity.x = -1
+      break
+  }
+})
+
+
+
+window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
+    switch (event.key) { 
+    case "d":
+      player1.velocity.x = 0
+      break;
+    case "w":
+      player1.velocity.y = gravity //When the w isn't pressed, the player will be affected by gravity again//
+      break
+    case "a":
+      player1.velocity.x = 0
+      break
+  }
+}) 
