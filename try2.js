@@ -124,6 +124,7 @@ window.addEventListener("keypress", (event) => { //An eventlistener that listens
       player1.velocity.x = -4
       break
   }
+  console.log(event.key)
 })
 
 
