@@ -44,7 +44,19 @@ class Anim {
         }
         this.lookDirection = "right"; // This variable is used to flip assets when the player starts moving in differend directions.
         this.grounded = false;
+        this.doubleJump = true;
         this.animator = new Anim(null, null, null, null, null)
+    }
+
+    Jump() {
+      if (this.grounded) { 
+        this.velocity.y = -10;
+        this.grounded = false;
+      } else if (this.doubleJump) {
+        this.velocity.y = -8;
+        this.doubleJump = false;
+        this.grounded = false;
+      }
     }
     // Add jump and attack functions. An attack funciton has to has as long of a windup as it has an animation, unfortunately.
     /*  Aerial attack: stop x and y velocity, 
@@ -59,8 +71,7 @@ player1.animator = new Anim (Animations.walk.length, Animations.walk.spriteSheet
 
 let lastTimestamp = 0,
 maxFPS = 15,
-timestep = 1000 / maxFPS, // ms for each frame
-gravityTimer = 3;
+timestep = 1000 / maxFPS // ms for each frame
 const gravityForce = 1 //Gravity so the player falls smoothly//
 
 function update(timestamp) {
@@ -79,15 +90,12 @@ function update(timestamp) {
   if (player1.position.y >= canvas.height) {
     player1.position.y = canvas.height;
     player1.grounded = true;
+    player1.doubleJump = true;
   }
 
-  if (gravityTimer > 5 && ! player1.grounded) {
-    gravityTimer = 0;
+  if (!player1.grounded) {
     player1.velocity.y += gravityForce;
-  } else {
-    gravityTimer++;
   }
-
   //player1.animator.timepassed += timestep;
   if (player1.animator.timepassed > player1.animator.duration) {
     player1.animator.timepassed = 0;
@@ -105,15 +113,15 @@ requestAnimationFrame(update);
 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
 window.addEventListener("keypress", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
-  switch (event.key) { 
+  switch (event.key) {
     case "d":
-      player1.velocity.x = 1
+      player1.velocity.x = 4
       break;
     case "w":
-      player1.velocity.y = -10
+      player1.Jump();
       break
     case "a":
-      player1.velocity.x = -1
+      player1.velocity.x = -4
       break
   }
 })
@@ -125,9 +133,6 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
     case "d":
       player1.velocity.x = 0
       break;
-    case "w":
-      player1.velocity.y = gravityForce //When the w isn't pressed, the player will be affected by gravity again//
-      break
     case "a":
       player1.velocity.x = 0
       break
