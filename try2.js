@@ -36,13 +36,14 @@ class Anim {
         this.stoptimer = 0;
         this.velocity = { // The x and y coordinates below determine the direction the player is moving. 
             x: 0,
-            y: 3
+            y: 0
         }
         this.position = { // This object stores the position of the player.
             x: x, // The position is at the bottom left of the player's sprite (at least, that's where it will be rendered from)
             y: y // The starting position of either player is determined by the respective input variables when the objects are created.
         }
         this.lookDirection = "right"; // This variable is used to flip assets when the player starts moving in differend directions.
+        this.grounded = false;
         this.animator = new Anim(null, null, null, null, null)
     }
     // Add jump and attack functions. An attack funciton has to has as long of a windup as it has an animation, unfortunately.
@@ -51,16 +52,17 @@ class Anim {
     */  
 }
 
-let player1 = new Player(0,150); // MaxFrames, spriteSheet, duration, width, height
+let player1 = new Player(0,50); // MaxFrames, spriteSheet, duration, width, height
 player1.animator = new Anim (Animations.walk.length, Animations.walk.spriteSheet, 1000, Animations.walk.width, Animations.walk.height);
 
 
 
 let lastTimestamp = 0,
-maxFPS = 50,
-timestep = 1000 / maxFPS // ms for each frame
+maxFPS = 6,
+timestep = 1000 / maxFPS, // ms for each frame
+gravityTimer = 3;
+const gravityForce = 1 //Gravity so the player falls smoothly//
 
-const gravity = 0.2 //Gravity so the player falls smoothly//
 function update(timestamp) {
   if (timestamp - lastTimestamp < timestep) {
       // Only continue if one timestep (1000/15 ms) has passed. Otherwise, schedule the next frame and cancel the current update code.
@@ -74,8 +76,14 @@ function update(timestamp) {
   player1.position.x += player1.velocity.x;
   player1.position.y += player1.velocity.y;
 
-  player1.animator.timepassed += timestep;
+  if (gravityTimer > 2) {
+    gravityTimer = 0;
+    player1.velocity.y += gravityForce;
+  } else {
+    gravityTimer++;
+  }
 
+  //player1.animator.timepassed += timestep;
   if (player1.animator.timepassed > player1.animator.duration) {
     player1.animator.timepassed = 0;
   }
@@ -84,10 +92,7 @@ function update(timestamp) {
 
   ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x, player1.position.y, player1.animator.width, player1.animator.height);
 
-  if ((player1.position.y + 24) >= canvas.height) { //Stops the player from falling through the floor by checking if it's position added with the height of the img is larger or equal to the height of the canvas//
-    player1.velocity = 0
-  } else 
-  player1.velocity.y += gravity //Lets the player jump smoothly//
+
 
   requestAnimationFrame(update)
 }
@@ -116,7 +121,7 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
       player1.velocity.x = 0
       break;
     case "w":
-      player1.velocity.y = gravity //When the w isn't pressed, the player will be affected by gravity again//
+      player1.velocity.y = gravityForce //When the w isn't pressed, the player will be affected by gravity again//
       break
     case "a":
       player1.velocity.x = 0
