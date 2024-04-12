@@ -76,8 +76,8 @@ function update(timestamp) {
   player1.position.x += player1.velocity.x;
   player1.position.y += player1.velocity.y;
 
-  if (player1.position.y >= canvas.height - 60) {
-    player1.position.y = canvas.height - 60;
+  if (player1.position.y >= canvas.height) {
+    player1.position.y = canvas.height;
     player1.grounded = true;
   }
 
@@ -95,7 +95,7 @@ function update(timestamp) {
 
   let frame = Math.floor(player1.animator.MaxFrames * player1.animator.timepassed / player1.animator.duration); // this line calculates the frame index player1 is currently at.
 
-  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x, player1.position.y, player1.animator.width, player1.animator.height);
+  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - 12, player1.position.y - 24, player1.animator.width, player1.animator.height);
 
 
 
