@@ -52,13 +52,13 @@ class Anim {
     */  
 }
 
-let player1 = new Player(0,50); // MaxFrames, spriteSheet, duration, width, height
+let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
 player1.animator = new Anim (Animations.walk.length, Animations.walk.spriteSheet, 1000, Animations.walk.width, Animations.walk.height);
 
 
 
 let lastTimestamp = 0,
-maxFPS = 6,
+maxFPS = 15,
 timestep = 1000 / maxFPS, // ms for each frame
 gravityTimer = 3;
 const gravityForce = 1 //Gravity so the player falls smoothly//
@@ -76,7 +76,12 @@ function update(timestamp) {
   player1.position.x += player1.velocity.x;
   player1.position.y += player1.velocity.y;
 
-  if (gravityTimer > 2) {
+  if (player1.position.y >= canvas.height - 60) {
+    player1.position.y = canvas.height - 60;
+    player1.grounded = true;
+  }
+
+  if (gravityTimer > 5 && ! player1.grounded) {
     gravityTimer = 0;
     player1.velocity.y += gravityForce;
   } else {
