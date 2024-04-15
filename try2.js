@@ -11,8 +11,8 @@ const Animations = {
       height: 24,
       length: 2
     },
-    walk: {
-        spriteSheet: document.getElementById("walking"),
+    walkRight: {
+        spriteSheet: document.getElementById("walking right"),
         width: 24,
         height:24,
         length: 4
@@ -66,7 +66,7 @@ class Anim {
 }
 
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
-player1.animator = new Anim (Animations.walk.length, Animations.walk.spriteSheet, 1000, Animations.walk.width, Animations.walk.height);
+player1.animator = new Anim (Animations.walkRight.length, Animations.walkRight.spriteSheet, 1000, Animations.walkRight.width, Animations.walkRight.height);
 
 
 
@@ -97,14 +97,16 @@ function update(timestamp) {
   if (!player1.grounded) {
     player1.velocity.y += gravityForce;
   }
-  //player1.animator.timepassed += timestep;
+
+
+  player1.animator.timepassed += timestep;
   if (player1.animator.timepassed > player1.animator.duration) {
     player1.animator.timepassed = 0;
   }
 
   let frame = Math.floor(player1.animator.MaxFrames * player1.animator.timepassed / player1.animator.duration); // this line calculates the frame index player1 is currently at.
-
-  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - 12 * player1.lookDirection, player1.position.y - 24, player1.animator.width * player1.lookDirection, player1.animator.height);
+console.log(frame)
+  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - 12, player1.position.y - 24, player1.animator.width, player1.animator.height);
 
 
 
@@ -115,24 +117,24 @@ ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
 
 
-
+// Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
 window.addEventListener("keypress", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
   switch (event.key) {
     case "d":
+    case "D":
       player1.velocity.x = 4
       player1.lookDirection = 1
-      player1.animator.spriteSheet.transform.scaleX(1);
       break;
     case "w":
+    case "W":
       player1.Jump();
       break
     case "a":
+    case "A":
       player1.velocity.x = -4
       player1.lookDirection = -1
-      player1.animator.spriteSheet.transform.scaleX(1);
       break
   }
-  console.log(event.key)
 })
 
 
@@ -141,9 +143,11 @@ window.addEventListener("keypress", (event) => { //An eventlistener that listens
 window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
     switch (event.key) { 
     case "d":
+    case "D":
       player1.velocity.x = 0
       break;
     case "a":
+    case "A":
       player1.velocity.x = 0
       break
   }
