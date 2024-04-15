@@ -85,7 +85,7 @@ player1.animator = new Anim (Animations.greenRunRight.length, Animations.greenRu
 
 
 let lastTimestamp = 0,
-maxFPS = 15,
+maxFPS = 30,
 timestep = 1000 / maxFPS // ms for each frame
 const gravityForce = 1 //Gravity so the player falls smoothly//
 
@@ -142,7 +142,7 @@ window.addEventListener("keypress", (event) => { //An eventlistener that listens
       break;
     case "w":
     case "W":
-      player1.Jump();
+      player1.Jump(); 
       break
     case "a":
     case "A":
