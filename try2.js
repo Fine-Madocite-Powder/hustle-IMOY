@@ -14,8 +14,21 @@ const Animations = {
     walkRight: {
         spriteSheet: document.getElementById("walking right"),
         width: 24,
-        height:24,
+        height: 24,
         length: 4
+    },
+
+    greenRunRight: {
+      spriteSheet: document.getElementById("greenRunRight"),
+      width: 36,
+      height: 36,
+      length: 4
+    },
+    greenRunLeft: {
+      spriteSheet: document.getElementById("greenRunLeft"),
+      width: 36,
+      height: 36,
+      length: 4
     }
   }
 
@@ -66,7 +79,7 @@ class Anim {
 }
 
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
-player1.animator = new Anim (Animations.walkRight.length, Animations.walkRight.spriteSheet, 1000, Animations.walkRight.width, Animations.walkRight.height);
+player1.animator = new Anim (Animations.greenRunRight.length, Animations.greenRunRight.spriteSheet, 1000, Animations.greenRunRight.width, Animations.greenRunRight.height);
 
 
 
@@ -106,7 +119,7 @@ function update(timestamp) {
 
   let frame = Math.floor(player1.animator.MaxFrames * player1.animator.timepassed / player1.animator.duration); // this line calculates the frame index player1 is currently at.
 console.log(frame)
-  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - 12, player1.position.y - 24, player1.animator.width, player1.animator.height);
+  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - player1.animator.width / 2, player1.position.y - player1.animator.height, player1.animator.width, player1.animator.height);
 
 
 
@@ -124,6 +137,8 @@ window.addEventListener("keypress", (event) => { //An eventlistener that listens
     case "D":
       player1.velocity.x = 4
       player1.lookDirection = 1
+      let exchangeD = new Anim (Animations.greenRunRight.length, Animations.greenRunRight.spriteSheet, 1000, Animations.greenRunRight.width, Animations.greenRunRight.height);
+      if (!exchangeD.spriteSheet === player1.animator.spriteSheet) player1.animator = exchangeD
       break;
     case "w":
     case "W":
@@ -133,6 +148,8 @@ window.addEventListener("keypress", (event) => { //An eventlistener that listens
     case "A":
       player1.velocity.x = -4
       player1.lookDirection = -1
+      let exchangeA = new Anim (Animations.greenRunRight.length, Animations.greenRunRight.spriteSheet, 1000, Animations.greenRunRight.width, Animations.greenRunRight.height);
+      if (!exchangeA.spriteSheet === player1.animator.spriteSheet) player1.animator = exchangeA
       break
   }
 })
