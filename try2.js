@@ -42,7 +42,8 @@ class Anim {
             x: x, // The position is at the bottom left of the player's sprite (at least, that's where it will be rendered from)
             y: y // The starting position of either player is determined by the respective input variables when the objects are created.
         }
-        this.lookDirection = "right"; // This variable is used to flip assets when the player starts moving in differend directions.
+        this.lookDirection = 1; // This variable is used to flip assets when the player starts moving in differend directions.
+                                // 1 means looking right, -1 means looking left.
         this.grounded = false;
         this.doubleJump = true;
         this.animator = new Anim(null, null, null, null, null)
@@ -103,7 +104,7 @@ function update(timestamp) {
 
   let frame = Math.floor(player1.animator.MaxFrames * player1.animator.timepassed / player1.animator.duration); // this line calculates the frame index player1 is currently at.
 
-  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - 12, player1.position.y - 24, player1.animator.width, player1.animator.height);
+  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - 12 * player1.lookDirection, player1.position.y - 24, player1.animator.width * player1.lookDirection, player1.animator.height);
 
 
 
@@ -112,20 +113,28 @@ function update(timestamp) {
 requestAnimationFrame(update);
 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
+
+
+
 window.addEventListener("keypress", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
   switch (event.key) {
     case "d":
       player1.velocity.x = 4
+      player1.lookDirection = 1
+      player1.animator.spriteSheet.transform.scaleX(1);
       break;
     case "w":
       player1.Jump();
       break
     case "a":
       player1.velocity.x = -4
+      player1.lookDirection = -1
+      player1.animator.spriteSheet.transform.scaleX(1);
       break
   }
   console.log(event.key)
 })
+
 
 
 
