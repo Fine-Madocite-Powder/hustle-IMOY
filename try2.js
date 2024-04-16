@@ -131,7 +131,7 @@ ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
 
 // Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
-window.addEventListener("keypress", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
+window.addEventListener("keydown", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
   switch (event.key) {
     case "d":
     case "D":
@@ -142,7 +142,7 @@ window.addEventListener("keypress", (event) => { //An eventlistener that listens
       break;
     case "w":
     case "W":
-      player1.Jump(); 
+      player1.Jump();
       break
     case "a":
     case "A":
