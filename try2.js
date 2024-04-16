@@ -13,7 +13,7 @@ const Animations = {
     },
 
 
-    
+
     greenRunLeft: {
       spriteSheet: document.getElementById("greenRunLeft"),
       width: 36,
@@ -41,7 +41,7 @@ class Anim {
   class Player {
     constructor(x, y) {
         this.health = 10;
-        this.stoptimer = 0;
+        this.stun = 0;
         this.velocity = { // The x and y coordinates below determine the direction the player is moving. 
             x: 0,
             y: 0
