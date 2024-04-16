@@ -142,7 +142,7 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       break;
     case "w":
     case "W":
-      player1.Jump(); 
+      player1.Jump();
       break
     case "a":
     case "A":
