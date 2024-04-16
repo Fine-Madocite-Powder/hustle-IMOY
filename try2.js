@@ -7,9 +7,9 @@ const background = document.getElementById("background");
 const Animations = {
     greenRunRight: {
       spriteSheet: document.getElementById("greenRunRight"),
-      width: 36,
-      height: 36,
-      length: 4
+      width: 34,
+      height: 32,
+      length: 8
     },
     greenRunLeft: {
       spriteSheet: document.getElementById("greenRunLeft"),
