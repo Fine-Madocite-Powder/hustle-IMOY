@@ -5,12 +5,15 @@ const background = document.getElementById("background");
 
 // "Animations" is an object that stores information about sprites that need to be rendered. It does not 
 const Animations = {
-    greenRunRight: {
-      spriteSheet: document.getElementById("greenRunRight"),
+    redRunRight: {
+      spriteSheet: document.getElementById("redRunRight"),
       width: 34,
       height: 32,
       length: 8
     },
+
+
+    
     greenRunLeft: {
       spriteSheet: document.getElementById("greenRunLeft"),
       width: 36,
@@ -19,7 +22,7 @@ const Animations = {
     },
     greenIdleRight: {
       spriteSheet: document.getElementById("greenIdleRight"),
-      
+
     }
   }
 
@@ -71,7 +74,7 @@ class Anim {
 }
 
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
-player1.animator = new Anim (Animations.greenRunRight.length, Animations.greenRunRight.spriteSheet, 1000, Animations.greenRunRight.width, Animations.greenRunRight.height, "runRight");
+player1.animator = new Anim (Animations.redRunRight.length, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
 
 
 
@@ -130,7 +133,7 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
     case "D":
       player1.velocity.x = 4
       player1.lookDirection = 1
-      let exchangeD = new Anim (Animations.greenRunRight.length, Animations.greenRunRight.spriteSheet, 1000, Animations.greenRunRight.width, Animations.greenRunRight.height, "runRight");
+      let exchangeD = new Anim (Animations.redRunRight.length, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
       if (!(exchangeD.spriteSheet === player1.animator.spriteSheet)) player1.animator = exchangeD;
       break;
     case "w":
@@ -141,7 +144,7 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
     case "A":
       player1.velocity.x = -4
       player1.lookDirection = -1
-      let exchangeA = new Anim (Animations.greenRunLeft.length, Animations.greenRunLeft.spriteSheet, 1000, Animations.greenRunLeft.width, Animations.greenRunLeft.height, "runLeft");
+      let exchangeA = new Anim (Animations.redRunLeft.length, Animations.redRunLeft.spriteSheet, 1000, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
       if (!(exchangeA.name === player1.animator.name)) player1.animator = exchangeA
       break
   }
@@ -157,7 +160,6 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
     case "a":
     case "A":
       player1.velocity.x = 0
-      let newIdle = new Anim(Animations.)
       break
   }
 }) 
