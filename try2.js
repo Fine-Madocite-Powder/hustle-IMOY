@@ -134,7 +134,7 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       player1.velocity.x = 4
       player1.lookDirection = 1
       let exchangeD = new Anim (Animations.redRunRight.length, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
-      if (!(exchangeD.spriteSheet === player1.animator.spriteSheet)) player1.animator = exchangeD;
+      if (exchangeD.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeD;
       break;
     case "w":
     case "W":
@@ -145,7 +145,7 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       player1.velocity.x = -4
       player1.lookDirection = -1
       let exchangeA = new Anim (Animations.redRunLeft.length, Animations.redRunLeft.spriteSheet, 1000, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
-      if (!(exchangeA.name === player1.animator.name)) player1.animator = exchangeA
+      if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
       break
   }
 })
