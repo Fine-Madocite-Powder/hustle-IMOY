@@ -20,9 +20,9 @@ const Animations = {
 
     greenRunRight: {
       spriteSheet: document.getElementById("greenRunRight"),
-      width: 36,
-      height: 36,
-      length: 4
+      width: 34,
+      height: 32,
+      length: 8
     },
     greenRunLeft: {
       spriteSheet: document.getElementById("greenRunLeft"),
@@ -131,7 +131,7 @@ ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
 
 // Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
-window.addEventListener("keypress", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
+window.addEventListener("keydown", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
   switch (event.key) {
     case "d":
     case "D":
