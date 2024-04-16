@@ -107,6 +107,8 @@ function update(timestamp) {
     player1.grounded = true;
     player1.doubleJump = true;
   }
+  if (player1.position.x < 0) player1.position.x = 0;
+  if (player1.position.x > canvas.width - player1.animator.width) player1.position.x = canvas.width - player1.animator.width;
 
   if (!player1.grounded) {
     player1.velocity.y += gravityForce;
@@ -119,7 +121,7 @@ function update(timestamp) {
   }
 
   let frame = Math.floor(player1.animator.MaxFrames * player1.animator.timepassed / player1.animator.duration); // this line calculates the frame index player1 is currently at.
-  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - player1.animator.width / 2, player1.position.y - player1.animator.height, player1.animator.width, player1.animator.height);
+  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x, player1.position.y - player1.animator.height, player1.animator.width, player1.animator.height);
 
 
 
