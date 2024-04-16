@@ -5,19 +5,6 @@ const background = document.getElementById("background");
 
 // "Animations" is an object that stores information about sprites that need to be rendered. It does not 
 const Animations = {
-    standingAttack: {
-      spriteSheet: document.getElementById("standingAttack"),
-      width: 24,
-      height: 24,
-      length: 2
-    },
-    walkRight: {
-        spriteSheet: document.getElementById("walking right"),
-        width: 24,
-        height: 24,
-        length: 4
-    },
-
     greenRunRight: {
       spriteSheet: document.getElementById("greenRunRight"),
       width: 36,
@@ -29,6 +16,10 @@ const Animations = {
       width: 36,
       height: 36,
       length: 4
+    },
+    greenIdleRight: {
+      spriteSheet: document.getElementById("greenIdleRight"),
+      
     }
   }
 
@@ -163,11 +154,10 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
     switch (event.key) { 
     case "d":
     case "D":
-      player1.velocity.x = 0
-      break;
     case "a":
     case "A":
       player1.velocity.x = 0
+      let newIdle = new Anim(Animations.)
       break
   }
 }) 
