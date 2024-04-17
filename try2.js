@@ -50,12 +50,43 @@ assetLoader.load().then(() => {
 /* "Animations" is an object that stores information about sprites that need to be rendered.
 Remove it from here, declare it at the top, 
 const Animations = {
+<<<<<<< HEAD
+    standingAttack: {
+      spriteSheet: document.getElementById("standingAttack"),
+      width: 34,
+      height: 32,
+      length: 8
+    },
+    walkRight: {
+        spriteSheet: document.getElementById("walking right"),
+        width: 24,
+        height: 24,
+        length: 4
+    },
+
+    greenRunRight: {
+      spriteSheet: document.getElementById("greenRunRight"),
+=======
     redRunRight: {
       spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
       width: 34,
       height: 32,
       maxFrames: 8
     },
+<<<<<<< HEAD
+    greenRunLeft: {
+      spriteSheet: document.getElementById("greenRunLeft"),
+      width: 36,
+      height: 36,
+      length: 4
+    },
+
+    IdleRed: {
+      spriteSheet: document.getElementById("IdleRed"),
+      width: 34,
+      height: 32,
+      length: 4,
+=======
     redRunLeft: {
       spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
       width: 34,
@@ -68,7 +99,8 @@ const Animations = {
 
 let players = [new Player(50,50), new Player(100, 50)];
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
-player1.animator = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
+
+player1.animator = new Anim (Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
 
 
 
@@ -144,6 +176,14 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 1000, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
       if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
       break
+    case "f":
+      let exchangeF = new Anim(Animations.standingAttack.length, Animations.standingAttack.spriteSheet, 1000, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
+      if (!(exchangeF.name === player1.animator.name)) player1.animator = exchangeF
+      break
+    default:
+      let exchangeI = new Anim(Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
+      if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
+      break
   }
 })
 
@@ -158,5 +198,7 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
     case "A":
       player1.velocity.x = 0
       break
+    case "f": //Attack animation//
+      
   }
 }) 
