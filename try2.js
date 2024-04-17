@@ -3,7 +3,63 @@ const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 
+const audio = document.getElementById("GameAudio")
+window.onload = function() {
+  audio.play()
+}
+
+
+
 let Animations = {};
+let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
+
+let lastTimestamp = 0,
+maxFPS = 30,
+timestep = 1000 / maxFPS // ms for each frame
+const gravityForce = 1 //Gravity so the player falls smoothly//
+
+// Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
+window.addEventListener("keydown", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
+  switch (event.key) {
+    case "d":
+      player1.velocity.x = 4
+      player1.lookDirection = 1
+      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 800, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
+      if (exchangeD.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeD;
+      break;
+    case "w":
+      player1.Jump();
+      break
+    case "a":
+      player1.velocity.x = -4
+      player1.lookDirection = -1
+      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
+      if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
+      break
+    case "f":
+      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 600, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
+      if (exchangeF.name !== player1.animator.name) player1.animator = exchangeF
+      break
+    default:
+      let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
+      if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
+      break
+  }
+})
+
+window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
+    switch (event.key) { 
+    case "d":
+    case "D":
+    case "a":
+    case "A":
+      player1.velocity.x = 0
+      break
+    case "f": //Attack animation//
+      
+  }
+}) 
+
 
 class AssetLoader {
   constructor(imageSrcList) {
@@ -38,73 +94,10 @@ class AssetLoader {
   }
 }
 
-<<<<<<< HEAD
-
-let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png"])
-assetLoader.load().then(() => {
-  
-  Animations = {
-    greenRunRight: {
-      spriteSheet: assetLoader.getImage("Red/RunRedRight"),
-
-    },
-
-        redRunRight: {
-          spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
-          width: 34,
-          height: 32,
-          maxFrames: 8
-        },
-    
-        IdleRed: {
-          spriteSheet: document.getElementById("IdleRed"),
-          width: 34,
-          height: 32,
-          length: 4,
-        },
-
-        redRunLeft: {
-          spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
-          width: 34,
-          height: 32,
-          maxFrames: 8
-        }
-      }
-      
-  requestAnimationFrame(update)
-})
-
-const audio = document.getElementById('GameAudio');
-window.onload = function() {
-  audio.play()
-}
-
-/* "Animations" is an object that stores information about sprites that need to be rendered.
-Remove it from here, declare it at the top, 
-const Animations = {
-<<<<<<< HEAD
-    standingAttack: {
-      spriteSheet: document.getElementById("standingAttack"),
-      width: 34,
-      height: 32,
-      length: 8
-    },
-    walkRight: {
-        spriteSheet: document.getElementById("walking right"),
-        width: 24,
-        height: 24,
-        length: 4
-    },
-
-    greenRunRight: {
-      spriteSheet: document.getElementById("greenRunRight"),
-=======
-=======
 let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png", "Red/AttackRed.png"])
 assetLoader.load().then(() => {
   
   Animations = { // Stoppa in alla animationer i animations-objektet
->>>>>>> 03559f1dbdd0765e853d493d2c7d1a0ef9c277cc
     redRunRight: {
       spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
       width: 34,
@@ -139,19 +132,6 @@ assetLoader.load().then(() => {
   // and written the Animations object, start the Update function for the first time.
 })
 
-
-
-
-let players = [new Player(50,50), new Player(100, 50)];
-let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
-
-
-
-
-let lastTimestamp = 0,
-maxFPS = 30,
-timestep = 1000 / maxFPS // ms for each frame
-const gravityForce = 1 //Gravity so the player falls smoothly//
 
 function update(timestamp) {
 
@@ -197,47 +177,3 @@ ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
 
 
-// Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
-window.addEventListener("keydown", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
-  switch (event.key) {
-    case "d":
-      player1.velocity.x = 4
-      player1.lookDirection = 1
-      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 800, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
-      if (exchangeD.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeD;
-      break;
-    case "w":
-      player1.Jump();
-      break
-    case "a":
-      player1.velocity.x = -4
-      player1.lookDirection = -1
-      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
-      if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
-      break
-    case "f":
-      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 600, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
-      if (exchangeF.name !== player1.animator.name) player1.animator = exchangeF
-      break
-    default:
-      let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
-      if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
-      break
-  }
-})
-
-
-
-
-window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
-    switch (event.key) { 
-    case "d":
-    case "D":
-    case "a":
-    case "A":
-      player1.velocity.x = 0
-      break
-    case "f": //Attack animation//
-      
-  }
-}) 
