@@ -38,6 +38,7 @@ class AssetLoader {
   }
 }
 
+
 let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png"])
 assetLoader.load().then(() => {
   
@@ -72,6 +73,10 @@ assetLoader.load().then(() => {
   requestAnimationFrame(update)
 })
 
+const audio = document.getElementById('GameAudio');
+window.onload = function() {
+  audio.play()
+}
 
 /* "Animations" is an object that stores information about sprites that need to be rendered.
 Remove it from here, declare it at the top, 
