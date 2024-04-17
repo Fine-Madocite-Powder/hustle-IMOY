@@ -7,9 +7,9 @@ const background = document.getElementById("background");
 const Animations = {
     standingAttack: {
       spriteSheet: document.getElementById("standingAttack"),
-      width: 24,
-      height: 24,
-      length: 2
+      width: 34,
+      height: 32,
+      length: 8
     },
     walkRight: {
         spriteSheet: document.getElementById("walking right"),
@@ -29,6 +29,13 @@ const Animations = {
       width: 36,
       height: 36,
       length: 4
+    },
+
+    IdleRed: {
+      spriteSheet: document.getElementById("IdleRed"),
+      width: 34,
+      height: 32,
+      length: 4,
     }
   }
 
@@ -80,7 +87,7 @@ class Anim {
 }
 
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
-player1.animator = new Anim (Animations.greenRunRight.length, Animations.greenRunRight.spriteSheet, 1000, Animations.greenRunRight.width, Animations.greenRunRight.height, "runRight");
+player1.animator = new Anim (Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
 
 
 
@@ -151,6 +158,14 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       let exchangeA = new Anim (Animations.greenRunLeft.length, Animations.greenRunLeft.spriteSheet, 1000, Animations.greenRunLeft.width, Animations.greenRunLeft.height, "runLeft");
       if (!(exchangeA.name === player1.animator.name)) player1.animator = exchangeA
       break
+    case "f":
+      let exchangeF = new Anim(Animations.standingAttack.length, Animations.standingAttack.spriteSheet, 1000, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
+      if (!(exchangeF.name === player1.animator.name)) player1.animator = exchangeF
+      break
+    default:
+      let exchangeI = new Anim(Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
+      if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
+      break
   }
 })
 
@@ -167,5 +182,7 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
     case "A":
       player1.velocity.x = 0
       break
+    case "f": //Attack animation//
+      
   }
 }) 
