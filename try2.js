@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 
-Animations = {};
+let Animations = {};
 
 class AssetLoader {
   constructor(imageSrcList) {
@@ -41,10 +41,10 @@ class AssetLoader {
 let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png"])
 assetLoader.load().then(() => {
   
-  Animations = {
+  Animations = { // Stoppa in alla animationer i animations-objektet
     greenRunRight: {
       spriteSheet: assetLoader.getImage("Red/RunRedRight"),
-
+      
     },
 
         redRunRight: {
@@ -68,59 +68,11 @@ assetLoader.load().then(() => {
           maxFrames: 8
         }
       }
-      
+
   requestAnimationFrame(update)
 })
 
 
-/* "Animations" is an object that stores information about sprites that need to be rendered.
-Remove it from here, declare it at the top, 
-const Animations = {
-<<<<<<< HEAD
-    standingAttack: {
-      spriteSheet: document.getElementById("standingAttack"),
-      width: 34,
-      height: 32,
-      length: 8
-    },
-    walkRight: {
-        spriteSheet: document.getElementById("walking right"),
-        width: 24,
-        height: 24,
-        length: 4
-    },
-
-    greenRunRight: {
-      spriteSheet: document.getElementById("greenRunRight"),
-=======
-    redRunRight: {
-      spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
-      width: 34,
-      height: 32,
-      maxFrames: 8
-    },
-<<<<<<< HEAD
-    greenRunLeft: {
-      spriteSheet: document.getElementById("greenRunLeft"),
-      width: 36,
-      height: 36,
-      length: 4
-    },
-
-    IdleRed: {
-      spriteSheet: document.getElementById("IdleRed"),
-      width: 34,
-      height: 32,
-      length: 4,
-=======
-    redRunLeft: {
-      spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
-      width: 34,
-      height: 32,
-      maxFrames: 8
-    }
-  }
-*/
 
 
 let players = [new Player(50,50), new Player(100, 50)];
