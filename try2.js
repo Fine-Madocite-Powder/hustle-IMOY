@@ -2,9 +2,13 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const background = document.getElementById("background");
 
+import Anim from './AnimClass'
+import Player from './PlayerClass'
+
 
 // "Animations" is an object that stores information about sprites that need to be rendered. It does not 
 const Animations = {
+<<<<<<< HEAD
     standingAttack: {
       spriteSheet: document.getElementById("standingAttack"),
       width: 34,
@@ -20,10 +24,15 @@ const Animations = {
 
     greenRunRight: {
       spriteSheet: document.getElementById("greenRunRight"),
+=======
+    redRunRight: {
+      spriteSheet: document.getElementById("redRunRight"),
+>>>>>>> 11f2e0349514d0c42231e7e41596674cea0cabbd
       width: 34,
       height: 32,
-      length: 8
+      maxFrames: 8
     },
+<<<<<<< HEAD
     greenRunLeft: {
       spriteSheet: document.getElementById("greenRunLeft"),
       width: 36,
@@ -36,58 +45,29 @@ const Animations = {
       width: 34,
       height: 32,
       length: 4,
+=======
+    redRunLeft: {
+      spriteSheet: document.getElementById("redRunLeft"),
+      width: 34,
+      height: 32,
+      maxFrames: 8
+    },
+    greenIdleRight: {
+      spriteSheet: document.getElementById("greenIdleRight"),
+
+>>>>>>> 11f2e0349514d0c42231e7e41596674cea0cabbd
     }
   }
 
-class Anim {
-    constructor(MaxFrames, spriteSheet, duration, width, height, name) {
-        this.width = width;
-        this.name = name
-        this.height = height;
-        this.MaxFrames = MaxFrames;
-        this.spriteSheet = spriteSheet;
-        this.duration = duration;
-        this.timepassed = 0;
-    }
-  }
 
-  class Player {
-    constructor(x, y) {
-        this.health = 10;
-        this.stoptimer = 0;
-        this.velocity = { // The x and y coordinates below determine the direction the player is moving. 
-            x: 0,
-            y: 0
-        }
-        this.position = { // This object stores the position of the player.
-            x: x, // The position is at the bottom left of the player's sprite (at least, that's where it will be rendered from)
-            y: y // The starting position of either player is determined by the respective input variables when the objects are created.
-        }
-        this.lookDirection = 1; // This variable is used to flip assets when the player starts moving in differend directions.
-                                // 1 means looking right, -1 means looking left.
-        this.grounded = false;
-        this.doubleJump = true;
-        this.animator = new Anim(null, null, null, null, null, null)
-    }
 
-    Jump() {
-      if (this.grounded) { 
-        this.velocity.y = -10;
-        this.grounded = false;
-      } else if (this.doubleJump) {
-        this.velocity.y = -8;
-        this.doubleJump = false;
-        this.grounded = false;
-      }
-    }
-    // Add jump and attack functions. An attack funciton has to has as long of a windup as it has an animation, unfortunately.
-    /*  Aerial attack: stop x and y velocity, 
-    *   Standing attack: short stoptimer
-    */  
-}
 
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
+<<<<<<< HEAD
 player1.animator = new Anim (Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
+=======
+player1.animator = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
+>>>>>>> 11f2e0349514d0c42231e7e41596674cea0cabbd
 
 
 
@@ -114,6 +94,8 @@ function update(timestamp) {
     player1.grounded = true;
     player1.doubleJump = true;
   }
+  if (player1.position.x < 0) player1.position.x = 0;
+  if (player1.position.x > canvas.width - player1.animator.width) player1.position.x = canvas.width - player1.animator.width;
 
   if (!player1.grounded) {
     player1.velocity.y += gravityForce;
@@ -126,7 +108,7 @@ function update(timestamp) {
   }
 
   let frame = Math.floor(player1.animator.MaxFrames * player1.animator.timepassed / player1.animator.duration); // this line calculates the frame index player1 is currently at.
-  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x - player1.animator.width / 2, player1.position.y - player1.animator.height, player1.animator.width, player1.animator.height);
+  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x, player1.position.y - player1.animator.height, player1.animator.width, player1.animator.height);
 
 
 
@@ -144,8 +126,8 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
     case "D":
       player1.velocity.x = 4
       player1.lookDirection = 1
-      let exchangeD = new Anim (Animations.greenRunRight.length, Animations.greenRunRight.spriteSheet, 1000, Animations.greenRunRight.width, Animations.greenRunRight.height, "runRight");
-      if (!(exchangeD.spriteSheet === player1.animator.spriteSheet)) player1.animator = exchangeD;
+      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
+      if (exchangeD.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeD;
       break;
     case "w":
     case "W":
@@ -155,8 +137,8 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
     case "A":
       player1.velocity.x = -4
       player1.lookDirection = -1
-      let exchangeA = new Anim (Animations.greenRunLeft.length, Animations.greenRunLeft.spriteSheet, 1000, Animations.greenRunLeft.width, Animations.greenRunLeft.height, "runLeft");
-      if (!(exchangeA.name === player1.animator.name)) player1.animator = exchangeA
+      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 1000, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
+      if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
       break
     case "f":
       let exchangeF = new Anim(Animations.standingAttack.length, Animations.standingAttack.spriteSheet, 1000, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
@@ -176,8 +158,6 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
     switch (event.key) { 
     case "d":
     case "D":
-      player1.velocity.x = 0
-      break;
     case "a":
     case "A":
       player1.velocity.x = 0
