@@ -11,14 +11,11 @@ const Animations = {
       height: 32,
       length: 8
     },
-
-
-
-    greenRunLeft: {
-      spriteSheet: document.getElementById("greenRunLeft"),
-      width: 36,
-      height: 36,
-      length: 4
+    redRunLeft: {
+      spriteSheet: document.getElementById("redRunLeft"),
+      width: 34,
+      height: 32,
+      length: 8
     },
     greenIdleRight: {
       spriteSheet: document.getElementById("greenIdleRight"),
