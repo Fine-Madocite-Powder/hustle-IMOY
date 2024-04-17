@@ -38,7 +38,7 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png"])
+let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png", "Red/AttackRed.png"])
 assetLoader.load().then(() => {
   
   Animations = { // Stoppa in alla animationer i animations-objektet
@@ -60,6 +60,12 @@ assetLoader.load().then(() => {
       height: 32,
       maxFrames: 4
     },
+    standingAttack: {
+      spriteSheet: assetLoader.getImage("Red/AttackRed.png"),
+      width:34,
+      height: 32,
+      maxFrames: 4
+    }
   }
 
   player1.animator = new Anim (Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
@@ -132,26 +138,23 @@ ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 window.addEventListener("keydown", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
   switch (event.key) {
     case "d":
-    case "D":
       player1.velocity.x = 4
       player1.lookDirection = 1
-      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
+      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 800, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
       if (exchangeD.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeD;
       break;
     case "w":
-    case "W":
       player1.Jump();
       break
     case "a":
-    case "A":
       player1.velocity.x = -4
       player1.lookDirection = -1
-      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 1000, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
+      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
       if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
       break
     case "f":
-      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 1000, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
-      if (!(exchangeF.name === player1.animator.name)) player1.animator = exchangeF
+      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 600, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
+      if (exchangeF.name !== player1.animator.name) player1.animator = exchangeF
       break
     default:
       let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
