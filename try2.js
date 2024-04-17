@@ -38,38 +38,36 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png"])
+let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png"])
 assetLoader.load().then(() => {
   
   Animations = { // Stoppa in alla animationer i animations-objektet
-    greenRunRight: {
-      spriteSheet: assetLoader.getImage("Red/RunRedRight"),
-      
+    redRunRight: {
+      spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
+      width: 34,
+      height: 32,
+      maxFrames: 8
     },
+    redRunLeft: {
+      spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
+      width: 34,
+      height: 32,
+      maxFrames: 8
+    },
+    IdleRed: {
+      spriteSheet: assetLoader.getImage("Red/IdleRed.png"),
+      width: 34,
+      height: 32,
+      maxFrames: 4
+    },
+  }
 
-        redRunRight: {
-          spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
-          width: 34,
-          height: 32,
-          maxFrames: 8
-        },
-    
-        IdleRed: {
-          spriteSheet: document.getElementById("IdleRed"),
-          width: 34,
-          height: 32,
-          length: 4,
-        },
+  player1.animator = new Anim (Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
 
-        redRunLeft: {
-          spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
-          width: 34,
-          height: 32,
-          maxFrames: 8
-        }
-      }
 
-  requestAnimationFrame(update)
+  requestAnimationFrame(update) 
+  // After having loaded all images, put them into the assetLoader library, 
+  // and written the Animations object, start the Update function for the first time.
 })
 
 
@@ -78,7 +76,6 @@ assetLoader.load().then(() => {
 let players = [new Player(50,50), new Player(100, 50)];
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
 
-player1.animator = new Anim (Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
 
 
 
@@ -126,8 +123,6 @@ function update(timestamp) {
   requestAnimationFrame(update)
 }
 
-console.log(ctx);
-console.log(background);
 
 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
@@ -155,11 +150,11 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
       break
     case "f":
-      let exchangeF = new Anim(Animations.standingAttack.length, Animations.standingAttack.spriteSheet, 1000, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
+      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 1000, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
       if (!(exchangeF.name === player1.animator.name)) player1.animator = exchangeF
       break
     default:
-      let exchangeI = new Anim(Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
+      let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
       if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
       break
   }
