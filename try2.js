@@ -40,9 +40,35 @@ class AssetLoader {
 
 let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png"])
 assetLoader.load().then(() => {
+  
+  Animations = {
+    greenRunRight: {
+      spriteSheet: assetLoader.getImage("Red/RunRedRight"),
 
-  
-  
+    },
+
+        redRunRight: {
+          spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
+          width: 34,
+          height: 32,
+          maxFrames: 8
+        },
+    
+        IdleRed: {
+          spriteSheet: document.getElementById("IdleRed"),
+          width: 34,
+          height: 32,
+          length: 4,
+        },
+
+        redRunLeft: {
+          spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
+          width: 34,
+          height: 32,
+          maxFrames: 8
+        }
+      }
+      
   requestAnimationFrame(update)
 })
 
