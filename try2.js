@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 
-Animations = {};
+let Animations = {};
 
 class AssetLoader {
   constructor(imageSrcList) {
@@ -38,6 +38,7 @@ class AssetLoader {
   }
 }
 
+<<<<<<< HEAD
 
 let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png"])
 assetLoader.load().then(() => {
@@ -98,40 +99,52 @@ const Animations = {
     greenRunRight: {
       spriteSheet: document.getElementById("greenRunRight"),
 =======
+=======
+let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png", "Red/AttackRed.png"])
+assetLoader.load().then(() => {
+  
+  Animations = { // Stoppa in alla animationer i animations-objektet
+>>>>>>> 03559f1dbdd0765e853d493d2c7d1a0ef9c277cc
     redRunRight: {
       spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
       width: 34,
       height: 32,
       maxFrames: 8
     },
-<<<<<<< HEAD
-    greenRunLeft: {
-      spriteSheet: document.getElementById("greenRunLeft"),
-      width: 36,
-      height: 36,
-      length: 4
-    },
-
-    IdleRed: {
-      spriteSheet: document.getElementById("IdleRed"),
-      width: 34,
-      height: 32,
-      length: 4,
-=======
     redRunLeft: {
       spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
       width: 34,
       height: 32,
       maxFrames: 8
+    },
+    IdleRed: {
+      spriteSheet: assetLoader.getImage("Red/IdleRed.png"),
+      width: 34,
+      height: 32,
+      maxFrames: 4
+    },
+    standingAttack: {
+      spriteSheet: assetLoader.getImage("Red/AttackRed.png"),
+      width:34,
+      height: 32,
+      maxFrames: 4
     }
   }
-*/
+
+  player1.animator = new Anim (Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
+
+
+  requestAnimationFrame(update) 
+  // After having loaded all images, put them into the assetLoader library, 
+  // and written the Animations object, start the Update function for the first time.
+})
+
+
 
 
 let players = [new Player(50,50), new Player(100, 50)];
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
 
-player1.animator = new Anim (Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
 
 
 
@@ -179,8 +192,6 @@ function update(timestamp) {
   requestAnimationFrame(update)
 }
 
-console.log(ctx);
-console.log(background);
 
 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
@@ -190,29 +201,26 @@ ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 window.addEventListener("keydown", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
   switch (event.key) {
     case "d":
-    case "D":
       player1.velocity.x = 4
       player1.lookDirection = 1
-      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
+      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 800, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
       if (exchangeD.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeD;
       break;
     case "w":
-    case "W":
       player1.Jump();
       break
     case "a":
-    case "A":
       player1.velocity.x = -4
       player1.lookDirection = -1
-      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 1000, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
+      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
       if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
       break
     case "f":
-      let exchangeF = new Anim(Animations.standingAttack.length, Animations.standingAttack.spriteSheet, 1000, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
-      if (!(exchangeF.name === player1.animator.name)) player1.animator = exchangeF
+      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 600, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
+      if (exchangeF.name !== player1.animator.name) player1.animator = exchangeF
       break
     default:
-      let exchangeI = new Anim(Animations.IdleRed.length, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
+      let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
       if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
       break
   }
