@@ -1,34 +1,72 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const background = document.getElementById("background");
+const background = new Image();
+background.src = "background.jpg"
 
-import Anim from './AnimClass'
-import Player from './PlayerClass'
+Animations = {};
+
+class AssetLoader {
+  constructor(imageSrcList) {
+    this.imageSrcList = imageSrcList;
+  }
+
+  load() {
+    return new Promise((resolve) => {
+      this.images = {};
+      let loadedCount = 0;
+
+      for(const src of this.imageSrcList) {
+        let image = new Image()
+        image.src = src;
+
+        image.onload = () => {
+          loadedCount++;
+          this.images[src] = image;
+          console.log(src, "loaded")
+
+          if(loadedCount == this.imageSrcList.length) {
+            resolve()
+          }
+
+        }
+      }
+    });
+  }
+
+  getImage(src) {
+    return this.images[src];
+  }
+}
+
+let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png"])
+assetLoader.load().then(() => {
+
+  
+  
+  requestAnimationFrame(update)
+})
 
 
-// "Animations" is an object that stores information about sprites that need to be rendered. It does not 
+/* "Animations" is an object that stores information about sprites that need to be rendered.
+Remove it from here, declare it at the top, 
 const Animations = {
     redRunRight: {
-      spriteSheet: document.getElementById("redRunRight"),
+      spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
       width: 34,
       height: 32,
       maxFrames: 8
     },
     redRunLeft: {
-      spriteSheet: document.getElementById("redRunLeft"),
+      spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
       width: 34,
       height: 32,
       maxFrames: 8
-    },
-    greenIdleRight: {
-      spriteSheet: document.getElementById("greenIdleRight"),
-
     }
   }
+*/
 
 
-
-
+let players = [new Player(50,50), new Player(100, 50)];
 let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
 player1.animator = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 1000, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
 
@@ -40,13 +78,13 @@ timestep = 1000 / maxFPS // ms for each frame
 const gravityForce = 1 //Gravity so the player falls smoothly//
 
 function update(timestamp) {
+
   if (timestamp - lastTimestamp < timestep) {
       // Only continue if one timestep (1000/15 ms) has passed. Otherwise, schedule the next frame and cancel the current update code.
       requestAnimationFrame(update)
       return
   }
   lastTimestamp = timestamp
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
   
   player1.position.x += player1.velocity.x;
@@ -77,7 +115,10 @@ function update(timestamp) {
 
   requestAnimationFrame(update)
 }
-requestAnimationFrame(update);
+
+console.log(ctx);
+console.log(background);
+
 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
 

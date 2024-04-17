@@ -7,9 +7,9 @@ class Anim {
         this.height = height;
         this.MaxFrames = MaxFrames;
         this.spriteSheet = spriteSheet;
-        this.duration = duration; // This is the full length of the animation, given in milliseconds. Could be stored in the Animations object.
+        this.duration = duration; // This is the full length of the animation, given in milliseconds. Could be stored in the Animations object, will see what we do later.
         this.timepassed = 0;
     }
   }
 
-export default Anim
+//export default Anim
