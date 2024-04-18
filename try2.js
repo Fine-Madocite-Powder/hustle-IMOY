@@ -3,16 +3,17 @@ const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 
-const audio = document.getElementById("GameAudio")
-window.onload = function() {
-  audio.play()
-  audio.volume = 0.08;
-}
+// const audio = document.getElementById("GameAudio")
+// window.onload = function() {
+//   audio.play()
+//   audio.volume = 0.08;
+// }
 
 
 
 let Animations = {};
-let player1 = new Player(50,50); // MaxFrames, spriteSheet, duration, width, height
+let players = [new Player(50,50), new Player(100,50)]
+
 
 let lastTimestamp = 0,
 maxFPS = 30,
@@ -20,51 +21,60 @@ timestep = 1000 / maxFPS // ms for each frame
 const gravityForce = 1 //Gravity so the player falls smoothly//
 
 // Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
-window.addEventListener("keydown", (event) => { //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
+window.addEventListener("keydown", (event) => { 
+  //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
+  let player;
+  if (['w','a','d','f'].includes(event.key)) player = players[0]
+  else player = players[1];
+  
+  
   switch (event.key) {
+
     case "d":
-      player1.velocity.x = 4
-      player1.lookDirection = 1
+    case "ArrowRight":
+      player.velocity.x = 4
+      player.lookDirection = 1
       let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 800, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
-      if (exchangeD.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeD;
-      break;
+      if (exchangeD.spriteSheet !== player.animator.spriteSheet) player.animator = exchangeD;
+      break
+
     case "w":
-      player1.Jump();
-      let exchangeJ = new Anim (Animations.RedJump.maxFrames, Animations.RedJump.spriteSheet, 800, Animations.RedJump.width, Animations.RedJump.height, "RedJump")
-      if (exchangeJ.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeJ
+    case "ArrowUp":
+      player.Jump();
+      let exchangeJ = new Anim (Animations.RedJump.maxFrames, Animations.RedJump.spriteSheet, 1500, Animations.RedJump.width, Animations.RedJump.height, "RedJump")
+      if (exchangeJ.spriteSheet !== player.animator.spriteSheet) player.animator = exchangeJ
       break
+
     case "a":
-      player1.velocity.x = -4
-      player1.lookDirection = -1
-      
-      
+    case "ArrowLeft":
+      player.velocity.x = -4
+      player.lookDirection = -1
       let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
-      
-      
-      if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
+      if (exchangeA.name !== player.animator.name) player.animator = exchangeA
       break
+
     case "f":
+    case "-":
       let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 600, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
-      if (exchangeF.name !== player1.animator.name) player1.animator = exchangeF
-      break
-    default:
-      let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
-      if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
+      if (exchangeF.name !== player.animator.name) player.animator = exchangeF
       break
   }
-  console.log(event.key)
 })
 
 window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
-    switch (event.key) { 
+    
+  let player = null;
+  if (["d", "a"].includes(event.key)) player = players[0];
+  else player = players[1];
+console.log(player.lookDirection)
+
+  switch (event.key) { 
     case "d":
-    case "D":
     case "a":
-    case "A":
-      player1.velocity.x = 0
+    case "ArrowRight":
+    case "ArrowLeft":
+      player.velocity.x = 0
       break
-    case "f": //Attack animation//
-      
   }
 }) 
 
@@ -135,12 +145,12 @@ assetLoader.load().then(() => {
       width:34,
       height:32,
       maxFrames: 8
-
     }
   }
 
-  player1.animator = new Anim (Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
-
+  for (let player of players) {
+    player.animator = new Anim (Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
+  }
 
   requestAnimationFrame(update) 
   // After having loaded all images, put them into the assetLoader library, 
@@ -158,34 +168,39 @@ function update(timestamp) {
   lastTimestamp = timestamp
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
   
-  player1.position.x += player1.velocity.x;
-  player1.position.y += player1.velocity.y;
 
-  if (player1.position.y >= canvas.height) {
-    player1.position.y = canvas.height;
-    player1.grounded = true;
-    player1.doubleJump = true;
+
+  for (let i = 0; i < players.length; i++) {
+    let player = players[i];
+
+  player.position.x += player.velocity.x;
+  player.position.y += player.velocity.y;
+
+  if (player.position.y >= canvas.height) {
+    player.position.y = canvas.height;
+    player.grounded = true;
+    player.doubleJump = true;
 
     let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
-    if (exchangeI.name !== player1.animator.name && player1.velocity.x == 0) player1.animator = exchangeI
+    if (exchangeI.name !== player.animator.name && player.velocity.x == 0) player.animator = exchangeI
   }
-  if (player1.position.x < 0) player1.position.x = 0;
-  if (player1.position.x > canvas.width - player1.animator.width) player1.position.x = canvas.width - player1.animator.width;
+  if (player.position.x < 0) player.position.x = 0;
+  if (player.position.x > canvas.width - player.animator.width) player.position.x = canvas.width - player.animator.width;
 
-  if (!player1.grounded) {
-    player1.velocity.y += gravityForce;
-  }
-
-
-  player1.animator.timepassed += timestep;
-  if (player1.animator.timepassed > player1.animator.duration) {
-    player1.animator.timepassed = 0;
+  if (!player.grounded) {
+    player.velocity.y += gravityForce;
   }
 
-  let frame = Math.floor(player1.animator.MaxFrames * player1.animator.timepassed / player1.animator.duration); // this line calculates the frame index player1 is currently at.
-  ctx.drawImage(player1.animator.spriteSheet, frame * player1.animator.width, 0, player1.animator.width, player1.animator.height, player1.position.x, player1.position.y - player1.animator.height, player1.animator.width, player1.animator.height);
 
+  player.animator.timepassed += timestep;
+  if (player.animator.timepassed > player.animator.duration) {
+    player.animator.timepassed = 0;
+  }
 
+  let frame = Math.floor(player.animator.MaxFrames * player.animator.timepassed / player.animator.duration); // this line calculates the frame index player is currently at.
+  ctx.drawImage(player.animator.spriteSheet, frame * player.animator.width, 0, player.animator.width, player.animator.height, player.position.x, player.position.y - player.animator.height, player.animator.width, player.animator.height);
+
+  }
 
   requestAnimationFrame(update)
 }
