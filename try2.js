@@ -33,7 +33,11 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
     case "a":
       player1.velocity.x = -4
       player1.lookDirection = -1
+      
+      
       let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
+      
+      
       if (exchangeA.name !== player1.animator.name) player1.animator = exchangeA
       break
     case "f":
