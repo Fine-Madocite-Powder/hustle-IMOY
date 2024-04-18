@@ -6,6 +6,7 @@ background.src = "background.jpg"
 const audio = document.getElementById("GameAudio")
 window.onload = function() {
   audio.play()
+  audio.volume = 0.08;
 }
 
 
@@ -29,6 +30,8 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       break;
     case "w":
       player1.Jump();
+      let exchangeJ = new Anim (Animations.RedJump.maxFrames, Animations.RedJump.spriteSheet, 800, Animations.RedJump.width, Animations.RedJump.height, "RedJump")
+      if (exchangeJ.spriteSheet !== player1.animator.spriteSheet) player1.animator = exchangeJ
       break
     case "a":
       player1.velocity.x = -4
@@ -49,6 +52,7 @@ window.addEventListener("keydown", (event) => { //An eventlistener that listens 
       if (!(exchangeI.name === player1.animator.name)) player1.animator = exchangeI
       break
   }
+  console.log(event.key)
 })
 
 window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
@@ -98,7 +102,7 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png", "Red/AttackRed.png"])
+let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png", "Red/AttackRed.png", "Red/JumpRed.png"])
 assetLoader.load().then(() => {
   
   Animations = { // Stoppa in alla animationer i animations-objektet
@@ -125,6 +129,13 @@ assetLoader.load().then(() => {
       width:34,
       height: 32,
       maxFrames: 4
+    },
+    RedJump: {
+      spriteSheet: assetLoader.getImage("Red/JumpRed.png"),
+      width:34,
+      height:32,
+      maxFrames: 8
+
     }
   }
 
@@ -154,6 +165,9 @@ function update(timestamp) {
     player1.position.y = canvas.height;
     player1.grounded = true;
     player1.doubleJump = true;
+
+    let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
+    if (exchangeI.name !== player1.animator.name && player1.velocity.x == 0) player1.animator = exchangeI
   }
   if (player1.position.x < 0) player1.position.x = 0;
   if (player1.position.x > canvas.width - player1.animator.width) player1.position.x = canvas.width - player1.animator.width;
