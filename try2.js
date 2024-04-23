@@ -62,7 +62,6 @@ window.addEventListener("keydown", (event) => {
 })
 
 window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
-    
   let player = null;
   if (["d", "a"].includes(event.key)) player = players[0];
   else player = players[1];
@@ -112,7 +111,7 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRed.png", "Red/AttackRed.png", "Red/JumpRed.png"])
+let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft", "Red/AttackRed.png", "Red/JumpRed.png"])
 assetLoader.load().then(() => {
   
   Animations = { // Stoppa in alla animationer i animations-objektet
@@ -128,8 +127,14 @@ assetLoader.load().then(() => {
       height: 32,
       maxFrames: 8
     },
-    IdleRed: {
-      spriteSheet: assetLoader.getImage("Red/IdleRed.png"),
+    idleRedRight: {
+      spriteSheet: assetLoader.getImage("Red/IdleRedRight.png"),
+      width: 34,
+      height: 32,
+      maxFrames: 4
+    },
+    idleRedLeft: {
+      spriteSheet: assetLoader.getImage("Red/IdleRedLeft.png"),
       width: 34,
       height: 32,
       maxFrames: 4
@@ -149,7 +154,7 @@ assetLoader.load().then(() => {
   }
 
   for (let player of players) {
-    player.animator = new Anim (Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "runRight");
+    player.animator = new Anim (Animations.idleRedLeft.maxFrames, Animations.idleRedLeft.spriteSheet, 1000, Animations.idleRedLeft.width, Animations.idleRedLeft.height, "runRight");
   }
 
   requestAnimationFrame(update) 
@@ -181,7 +186,10 @@ function update(timestamp) {
     player.grounded = true;
     player.doubleJump = true;
 
-    let exchangeI = new Anim(Animations.IdleRed.maxFrames, Animations.IdleRed.spriteSheet, 1000, Animations.IdleRed.width, Animations.IdleRed.height, "RedIdle")
+    let IspriteSheet;
+    (player.lookDirection === -1) ? IspriteSheet = Animations.idleRedLeft.spriteSheet : IspriteSheet = Animations.idleRedRight.spriteSheet;
+
+    let exchangeI = new Anim(Animations.idleRedLeft.maxFrames, Animations.idleRedLeft.spriteSheet, 1000, Animations.idleRedLeft.width, Animations.idleRedLeft.height, "RedIdle")
     if (exchangeI.name !== player.animator.name && player.velocity.x == 0) player.animator = exchangeI
   }
   if (player.position.x < 0) player.position.x = 0;
