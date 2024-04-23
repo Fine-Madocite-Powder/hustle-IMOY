@@ -65,7 +65,6 @@ window.addEventListener("keyup", (event) => {  //Event listener that listens to 
   let player = null;
   if (["d", "a"].includes(event.key)) player = players[0];
   else player = players[1];
-console.log(player.lookDirection)
 
   switch (event.key) { 
     case "d":
@@ -111,7 +110,7 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft", "Red/AttackRed.png", "Red/JumpRed.png"])
+let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft.png", "Red/AttackRed.png", "Red/JumpRed.png"])
 assetLoader.load().then(() => {
   
   Animations = { // Stoppa in alla animationer i animations-objektet
@@ -131,13 +130,13 @@ assetLoader.load().then(() => {
       spriteSheet: assetLoader.getImage("Red/IdleRedRight.png"),
       width: 34,
       height: 32,
-      maxFrames: 4
+      maxFrames: 6
     },
     idleRedLeft: {
       spriteSheet: assetLoader.getImage("Red/IdleRedLeft.png"),
       width: 34,
       height: 32,
-      maxFrames: 4
+      maxFrames: 6
     },
     standingAttack: {
       spriteSheet: assetLoader.getImage("Red/AttackRed.png"),
@@ -187,9 +186,9 @@ function update(timestamp) {
     player.doubleJump = true;
 
     let IspriteSheet;
-    (player.lookDirection === -1) ? IspriteSheet = Animations.idleRedLeft.spriteSheet : IspriteSheet = Animations.idleRedRight.spriteSheet;
+    (player.lookDirection === 1) ? IspriteSheet = Animations.idleRedRight.spriteSheet : IspriteSheet = Animations.idleRedLeft.spriteSheet;
 
-    let exchangeI = new Anim(Animations.idleRedLeft.maxFrames, Animations.idleRedLeft.spriteSheet, 1000, Animations.idleRedLeft.width, Animations.idleRedLeft.height, "RedIdle")
+    let exchangeI = new Anim(Animations.idleRedLeft.maxFrames, IspriteSheet, 1000, Animations.idleRedLeft.width, Animations.idleRedLeft.height, "RedIdle")
     if (exchangeI.name !== player.animator.name && player.velocity.x == 0) player.animator = exchangeI
   }
   if (player.position.x < 0) player.position.x = 0;
