@@ -39,14 +39,19 @@ window.addEventListener("keydown", (event) => {
     case "ArrowRight":
       player.velocity.x = 4
       player.lookDirection = 1
-      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 800, Animations.redRunRight.width, Animations.redRunRight.height, "runRight");
+      let exchangeD = new Anim (Animations.redRunRight.maxFrames, Animations.redRunRight.spriteSheet, 800, Animations.redRunRight.width, Animations.redRunRight.height, "run");
       if (exchangeD.spriteSheet !== player.animator.spriteSheet) player.animator = exchangeD;
       break
 
     case "w":
     case "ArrowUp":
       player.Jump();
-      let exchangeJ = new Anim (Animations.RedJump.maxFrames, Animations.RedJump.spriteSheet, 1500, Animations.RedJump.width, Animations.RedJump.height, "RedJump")
+
+      let spriteSheetJ;
+
+      (player.lookDirection === 1) ? spriteSheetJ = Animations.jumpRedRight.spriteSheet : spriteSheetJ = Animations.jumpRedLeft.spriteSheet;
+
+      let exchangeJ = new Anim (Animations.jumpRedLeft.maxFrames, spriteSheetJ, 1500, Animations.jumpRedLeft.width, Animations.jumpRedLeft.height, "jump")
       if (exchangeJ.spriteSheet !== player.animator.spriteSheet) player.animator = exchangeJ
       break
 
@@ -54,13 +59,13 @@ window.addEventListener("keydown", (event) => {
     case "ArrowLeft":
       player.velocity.x = -4
       player.lookDirection = -1
-      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "runLeft");
+      let exchangeA = new Anim (Animations.redRunLeft.maxFrames, Animations.redRunLeft.spriteSheet, 800, Animations.redRunLeft.width, Animations.redRunLeft.height, "run");
       if (exchangeA.name !== player.animator.name) player.animator = exchangeA
       break
 
     case "f":
     case "-":
-      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 600, Animations.standingAttack.width, Animations.standingAttack.height, "RedAttack")
+      let exchangeF = new Anim(Animations.standingAttack.maxFrames, Animations.standingAttack.spriteSheet, 600, Animations.standingAttack.width, Animations.standingAttack.height, "attack")
       if (exchangeF.name !== player.animator.name) player.animator = exchangeF
       break
   }
@@ -115,7 +120,7 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft.png", "Red/AttackRed.png", "Red/JumpRed.png"])
+let assetLoader = new AssetLoader(["background.jpg", "Red/JumpRedLeft.png", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft.png", "Red/AttackRed.png", "Red/JumpRedRight.png"])
 assetLoader.load().then(() => {
   
   Animations = { // Stoppa in alla animationer i animations-objektet
@@ -149,8 +154,14 @@ assetLoader.load().then(() => {
       height: 32,
       maxFrames: 4
     },
-    RedJump: {
-      spriteSheet: assetLoader.getImage("Red/JumpRed.png"),
+    jumpRedRight: {
+      spriteSheet: assetLoader.getImage("Red/JumpRedRight.png"),
+      width:34,
+      height:32,
+      maxFrames: 8
+    },
+    jumpRedLeft: {
+      spriteSheet: assetLoader.getImage("Red/JumpRedLeft.png"),
       width:34,
       height:32,
       maxFrames: 8
@@ -158,7 +169,7 @@ assetLoader.load().then(() => {
   }
 
   for (let player of players) {
-    player.animator = new Anim (Animations.idleRedLeft.maxFrames, Animations.idleRedLeft.spriteSheet, 1000, Animations.idleRedLeft.width, Animations.idleRedLeft.height, "runRight");
+    player.animator = new Anim (Animations.idleRedRight.maxFrames, Animations.idleRedRight.spriteSheet, 2000, Animations.idleRedRight.width, Animations.idleRedRight.height, "idleRight");
   }
 
   requestAnimationFrame(update) 
@@ -193,7 +204,7 @@ function update(timestamp) {
     let IspriteSheet;
     (player.lookDirection === 1) ? IspriteSheet = Animations.idleRedRight.spriteSheet : IspriteSheet = Animations.idleRedLeft.spriteSheet;
 
-    let exchangeI = new Anim(Animations.idleRedLeft.maxFrames, IspriteSheet, 1000, Animations.idleRedLeft.width, Animations.idleRedLeft.height, "RedIdle")
+    let exchangeI = new Anim(Animations.idleRedLeft.maxFrames, IspriteSheet, 2000, Animations.idleRedLeft.width, Animations.idleRedLeft.height, "idle")
     if (exchangeI.name !== player.animator.name && player.velocity.x == 0) player.animator = exchangeI
   }
   if (player.position.x < 0) player.position.x = 0;
