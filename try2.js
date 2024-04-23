@@ -3,11 +3,11 @@ const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 
-// const audio = document.getElementById("GameAudio")
-// window.onload = function() {
-//   audio.play()
-//   audio.volume = 0.08;
-// }
+const audio = document.getElementById("GameAudio")
+window.onload = function() {
+  audio.play()
+  audio.volume = 0.06;
+}
 
 
 
@@ -20,6 +20,11 @@ maxFPS = 30,
 timestep = 1000 / maxFPS // ms for each frame
 const gravityForce = 1 //Gravity so the player falls smoothly//
 
+let keys = {
+  ArrowRight: false,
+  w: false
+}
+
 // Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
 window.addEventListener("keydown", (event) => { 
   //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
@@ -27,7 +32,7 @@ window.addEventListener("keydown", (event) => {
   if (['w','a','d','f'].includes(event.key)) player = players[0]
   else player = players[1];
   
-  
+  keys[event.key] = true
   switch (event.key) {
 
     case "d":
