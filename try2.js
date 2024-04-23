@@ -21,18 +21,20 @@ timestep = 1000 / maxFPS // ms for each frame
 const gravityForce = 1 //Gravity so the player falls smoothly//
 
 let keys = {
-  ArrowRight: false,
-  w: false
+  a: false,
+  d: false,
 }
 
 // Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
-window.addEventListener("keydown", (event) => { 
+window.addEventListener("keydown", (event) => {
+
+  keys[event.key] = true
+
   //An eventlistener that listens to which key is pressed and act in respons depending on the key. The even object is the key that's being pressed//
   let player;
   if (['w','a','d','f'].includes(event.key)) player = players[0]
   else player = players[1];
   
-  keys[event.key] = true
   switch (event.key) {
 
     case "d":
@@ -72,7 +74,10 @@ window.addEventListener("keydown", (event) => {
 })
 
 window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
-  let player = null;
+  
+  keys[event.key] = false
+  
+  let player;
   if (["d", "a"].includes(event.key)) player = players[0];
   else player = players[1];
 
@@ -179,7 +184,6 @@ assetLoader.load().then(() => {
 
 
 function update(timestamp) {
-
   if (timestamp - lastTimestamp < timestep) {
       // Only continue if one timestep (1000/15 ms) has passed. Otherwise, schedule the next frame and cancel the current update code.
       requestAnimationFrame(update)
@@ -192,6 +196,18 @@ function update(timestamp) {
 
   for (let i = 0; i < players.length; i++) {
     let player = players[i];
+    let otherPlayer;
+
+    (players.indexOf(player)) ? otherPlayer = players[0] : otherPlayer = players[1];
+
+    let effectiveCommands;
+    for (command in keys) {
+
+      
+
+    }
+
+
 
   player.position.x += player.velocity.x;
   player.position.y += player.velocity.y;
@@ -200,7 +216,7 @@ function update(timestamp) {
     player.position.y = canvas.height;
     player.grounded = true;
     player.doubleJump = true;
-
+ 
     let IspriteSheet;
     (player.lookDirection === 1) ? IspriteSheet = Animations.idleRedRight.spriteSheet : IspriteSheet = Animations.idleRedLeft.spriteSheet;
 
@@ -219,9 +235,15 @@ function update(timestamp) {
   if (player.animator.timepassed > player.animator.duration) {
     player.animator.timepassed = 0;
   }
+  
+  if (player.hitbox.position.x + player.hitbox.width > otherPlayer.position.x) { //Collision checker
 
-  let frame = Math.floor(player.animator.MaxFrames * player.animator.timepassed / player.animator.duration); // this line calculates the frame index player is currently at.
-  ctx.drawImage(player.animator.spriteSheet, frame * player.animator.width, 0, player.animator.width, player.animator.height, player.position.x, player.position.y - player.animator.height, player.animator.width, player.animator.height);
+    
+    
+  };
+
+  let frame = Math.floor(player.animator.MaxFrames * player.animator.timepassed / player.animator.duration) // this line calculates the frame index player is currently at.
+  ctx.drawImage(player.animator.spriteSheet, frame * player.animator.width, 0, player.animator.width, player.animator.height, player.position.x, player.position.y - player.animator.height, player.animator.width, player.animator.height, player.hitbox.position.x, player.hitbox.position.y, player.hitbox.width, player.hitbox.height);
 
   }
 

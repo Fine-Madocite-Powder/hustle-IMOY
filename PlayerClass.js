@@ -16,6 +16,11 @@ class Player {
         this.grounded = false;
         this.doubleJump = true;
         this.animator = new Anim(null, null, null, null, null, null) // creates a new animator. Will 
+        this.hitbox = {
+          position: this.position, //Position of the hitbox is dependant on the position of the player
+          width: 34,
+          height: 32,
+        }
     }
     Jump() {
         if (this.grounded) { 
