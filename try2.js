@@ -228,13 +228,14 @@ function update(timestamp) {
 
     
     if (player.animator.name !== AnimationName)
-    player.ChangeAnimation(AnimationName, AnimationDuration) 
+    player.ChangeAnimation(AnimationName, duration) 
 
   } else player.stun -= timestep;
 
 
+  
   if (player.hitbox.position.x + player.hitbox.width > otherPlayer.position.x) { //Collision checker
-
+    console.log("Hit")
     
     
   };

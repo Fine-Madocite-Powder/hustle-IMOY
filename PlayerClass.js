@@ -39,10 +39,11 @@ class Player {
     }
 
   ChangeAnimation(animationName, duration) {
+    console.log("Boob")
     if (this.animator.name !== animationName)
     
     this.animator = new Anim(
-      Animations[animationName].maxFrames, 
+      Animations[animationName].MaxFrames, 
       Animations[animationName].spriteSheet, 
       duration, 
       Animations[animationName].width, 
