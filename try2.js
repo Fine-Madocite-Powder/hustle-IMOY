@@ -225,13 +225,18 @@ function update(timestamp) {
     AnimationName += (player.lookDirection === 1) ? "Right" : "Left"
 
     
+    if (player.animator.name !== AnimationName)
+    player.ChangeAnimation(AnimationName, duration) 
+
     if (player.animator.name !== AnimationName)    player.ChangeAnimation(AnimationName, AnimationDuration) 
+
 
   } else player.stun -= timestep;
 
 
-  if (player.hitbox.position.x + player.hitbox.width > otherPlayer.position.x) { //Collision checker
 
+  if (player.hitbox.position.x + player.hitbox.width > otherPlayer.position.x) { //Collision checker
+    console.log("Hit")
     
     
   };

@@ -45,7 +45,7 @@ class Player {
     console.log(animationName)
     
     this.animator = new Anim(
-      Animations[animationName].maxFrames, 
+      Animations[animationName].MaxFrames, 
       Animations[animationName].spriteSheet, 
       duration, 
       Animations[animationName].width, 
