@@ -39,8 +39,13 @@ class Player {
     }
 
   ChangeAnimation(animationName, duration) {
-    console.log("Boob")
+<<<<<<< HEAD
+=======
+
+>>>>>>> fba4247f171fbb45a0eb75ea1833c4c0234dc0d2
     if (this.animator.name !== animationName)
+
+    console.log(animationName)
     
     this.animator = new Anim(
       Animations[animationName].MaxFrames, 

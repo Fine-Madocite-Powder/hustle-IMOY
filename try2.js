@@ -25,9 +25,7 @@ let keys = { }
 window.addEventListener("keydown", (event) => {
 
   keys[event.key] = true
-
 })
-
 window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
 
   keys[event.key] = false
@@ -52,7 +50,6 @@ class AssetLoader {
         image.onload = () => {
           loadedCount++;
           this.images[src] = image;
-          console.log(src, "loaded")
 
           if(loadedCount == this.imageSrcList.length) {
             resolve()
@@ -151,7 +148,7 @@ function update(timestamp) {
     // Defining both players
     let player = players[i];
     let otherPlayer;
-    otherPlayer = (players.indexOf(player) ? players[0] : players[1])
+    otherPlayer = players.indexOf(player) ? players[0] : players[1]
     // If we are currently calculating for player 1 (index 0), the statement will evaluate to falsy.
 
 
@@ -198,6 +195,7 @@ function update(timestamp) {
     let AnimationName;
     let AnimationDuration = 1800;
 
+
     if (effectiveCommands.left === effectiveCommands.right) {
       player.velocity.x = 0;
       AnimationName = "idle"
@@ -224,11 +222,15 @@ function update(timestamp) {
       AnimationName = "groundedAttack"
     }
 
-    AnimationName = (player.lookDirection === 1) ? "Right" : "Left"
+    AnimationName += (player.lookDirection === 1) ? "Right" : "Left"
 
     
+<<<<<<< HEAD
     if (player.animator.name !== AnimationName)
     player.ChangeAnimation(AnimationName, duration) 
+=======
+    if (player.animator.name !== AnimationName)    player.ChangeAnimation(AnimationName, AnimationDuration) 
+>>>>>>> fba4247f171fbb45a0eb75ea1833c4c0234dc0d2
 
   } else player.stun -= timestep;
 
