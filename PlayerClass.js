@@ -39,10 +39,7 @@ class Player {
     }
 
   ChangeAnimation(animationName, duration) {
-<<<<<<< HEAD
-=======
 
->>>>>>> fba4247f171fbb45a0eb75ea1833c4c0234dc0d2
     if (this.animator.name !== animationName)
 
     console.log(animationName)
