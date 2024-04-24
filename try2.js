@@ -209,7 +209,7 @@ function update(timestamp) {
       AnimationName = "run"
     } // Could probably be moved to a method in the player class, ask Ray
 
-    if (effectiveCommands.jump) {
+    if (effectiveCommands.jump || player.position.y < canvas.height) {
       player.Jump();
       AnimationDuration = 1000;
       AnimationName = "jump"
