@@ -39,7 +39,10 @@ class Player {
     }
 
   ChangeAnimation(animationName, duration) {
+
     if (this.animator.name !== animationName)
+
+    console.log(animationName)
     
     this.animator = new Anim(
       Animations[animationName].maxFrames, 
