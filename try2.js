@@ -211,7 +211,7 @@ function update(timestamp) {
       AnimationName = "run"
     } // Could probably be moved to a method in the player class, ask Ray
 
-    if (effectiveCommands.jump || player.position.y < canvas.height) {
+    if (effectiveCommands.jump) {
       player.Jump();
       AnimationDuration = 1000;
       AnimationName = "jump"
@@ -230,7 +230,6 @@ function update(timestamp) {
     player.ChangeAnimation(AnimationName, AnimationDuration) }
 
     if (player.animator.name !== AnimationName)    player.ChangeAnimation(AnimationName, AnimationDuration) 
-
 
   } else player.stun -= timestep;
 
@@ -264,4 +263,3 @@ if (
 }
 
 
-ctx.drawImage(background, 0, 0, canvas.width, canvas.height);

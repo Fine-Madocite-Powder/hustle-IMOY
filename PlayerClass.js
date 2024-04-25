@@ -15,8 +15,7 @@ class Player {
           y: y // The starting position of each player is determined by the respective parameters when the objects are created.
       }
       this.hitbox = {
-        position: this.position,
-        width: 38,
+        width: 0,
         height: -38
       }
       this.lookDirection = 1; // Used to flip the hitboxes of attacks
@@ -43,8 +42,6 @@ class Player {
   ChangeAnimation(animationName, AnimationDuration) {
 
     if (this.animator.name !== animationName)
-
-    console.log(animationName)
     
     this.animator = new Anim(
       Animations[animationName].maxFrames, 
