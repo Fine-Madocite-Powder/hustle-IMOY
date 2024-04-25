@@ -1,6 +1,8 @@
 class Player {
-  constructor(x, y) {
+  constructor(x, y, assetLoader, color) {
       this.health = 10;
+      this.color = color
+      this.assetLoader = assetLoader;
       this.speed = 5;
       this.state = "idle right";
       this.stun = 0; // Prevents the player from entering other commands while attacking or immediately after being struck by an attack. 
@@ -38,16 +40,16 @@ class Player {
       }
     }
 
-  ChangeAnimation(animationName, duration) {
+  ChangeAnimation(animationName, AnimationDuration) {
 
     if (this.animator.name !== animationName)
 
     console.log(animationName)
     
     this.animator = new Anim(
-      Animations[animationName].MaxFrames, 
-      Animations[animationName].spriteSheet, 
-      duration, 
+      Animations[animationName].maxFrames, 
+      assetLoader.getImage(`${color}/${animationName}.png`), 
+      AnimationDuration, 
       Animations[animationName].width, 
       Animations[animationName].height, 
       animationName )

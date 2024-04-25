@@ -6,7 +6,7 @@ background.src = "background.jpg"
 
 
 let Animations = {};
-let players = [new Player(50,50), new Player(100,50)]
+// let players = [new Player(50,50, assetLoader, "Red/IdleRedRight.png"), new Player(100,50, assetLoader, "RedMod/IdleRedLeft-modified.png")]
 const controls = {
   left: ["a", "ArrowLeft"],
   right: ["d", "ArrowRight"],
@@ -65,8 +65,10 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/JumpRedLeft.png", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft.png", "Red/AttackRed.png", "Red/JumpRedRight.png"])
+let assetLoader = new AssetLoader(["background.jpg", "Red/JumpRedLeft.png", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft.png", "Red/AttackRed.png", "Red/JumpRedRight.png", "RedMod/IdleRedLeft-modified.png"])
 assetLoader.load().then(() => {
+
+  let players = [new Player(50,50, assetLoader, "Red/IdleRedRight.png"), new Player(100,50, assetLoader, "RedMod/IdleRedLeft-modified.png")]
   
   Animations = { // Stoppa in alla animationer i animations-objektet
     runRight: {
@@ -215,7 +217,6 @@ function update(timestamp) {
       AnimationName = "jump"
     }
 
-
     if (effectiveCommands.attack && player.grounded) { 
       player.stun += 500;
       AnimationDuration = 400
@@ -225,8 +226,8 @@ function update(timestamp) {
     AnimationName += (player.lookDirection === 1) ? "Right" : "Left"
 
     
-    if (player.animator.name !== AnimationName)
-    player.ChangeAnimation(AnimationName, duration) 
+    if (player.animator.name !== AnimationName){
+    player.ChangeAnimation(AnimationName, AnimationDuration) }
 
     if (player.animator.name !== AnimationName)    player.ChangeAnimation(AnimationName, AnimationDuration) 
 
@@ -235,11 +236,18 @@ function update(timestamp) {
 
 
 
-  if (player.hitbox.position.x + player.hitbox.width > otherPlayer.position.x) { //Collision checker
-    console.log("Hit")
-    
-    
-  };
+// Compare hitboxes for collision detection
+if (
+  player.hitbox.position.x < otherPlayer.hitbox.position.x + otherPlayer.hitbox.width &&
+  player.hitbox.position.x + player.hitbox.width > otherPlayer.hitbox.position.x &&
+  player.hitbox.position.y < otherPlayer.hitbox.position.y + otherPlayer.hitbox.height &&
+  player.hitbox.position.y + player.hitbox.height > otherPlayer.hitbox.position.y
+) {
+  // Collision detected
+  console.log("Collision detected between player and otherPlayer");
+  // You can add whatever logic you need here when a collision is detected
+}
+
 
 
 
@@ -247,7 +255,7 @@ function update(timestamp) {
   if (player.animator.timepassed > player.animator.duration) {
     player.animator.timepassed = 0;
   }
-  let frame = Math.floor(player.animator.MaxFrames * player.animator.timepassed / player.animator.duration) // this line calculates the frame index player is currently at.
+  let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) // this line calculates the frame index player is currently at.
   ctx.drawImage(player.animator.spriteSheet, frame * player.animator.width, 0, player.animator.width, player.animator.height, player.position.x, player.position.y - player.animator.height, player.animator.width, player.animator.height, player.hitbox.position.x, player.hitbox.position.y, player.hitbox.width, player.hitbox.height);
 
   }
