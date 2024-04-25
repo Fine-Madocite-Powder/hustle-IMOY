@@ -209,7 +209,7 @@ function update(timestamp) {
       AnimationName = "run"
     } // Could probably be moved to a method in the player class, ask Ray
 
-    if (effectiveCommands.jump || player.position.y < canvas.height) {
+    if (effectiveCommands.jump) {
       player.Jump();
       AnimationDuration = 1000;
       AnimationName = "jump"
@@ -225,21 +225,24 @@ function update(timestamp) {
     AnimationName += (player.lookDirection === 1) ? "Right" : "Left"
 
     
-    if (player.animator.name !== AnimationName)
-    player.ChangeAnimation(AnimationName, duration) 
-
     if (player.animator.name !== AnimationName)    player.ChangeAnimation(AnimationName, AnimationDuration) 
-
 
   } else player.stun -= timestep;
 
 
 
-  if (player.hitbox.position.x + player.hitbox.width > otherPlayer.position.x) { //Collision checker
-    console.log("Hit")
-    
-    
-  };
+
+  if (player.position.x >= otherPlayer.position.x && player.position.x <= otherPlayer.position.x + otherPlayer.hitbox.width) {
+    console.log("letsfkn go")
+  }
+
+  // if (player.position.x + player.width >= otherPlayer.position.x && 
+  //   player.position.x <= otherPlayer.position.x + otherPlayer.width &&
+  //   player.position.y + player.height >= otherPlayer.position.y && 
+  //   player.position.y <= otherPlayer.position.y + otherPlayer.height)  {// Collision detected
+  //   console.log("Balls")
+  // }
+
 
 
 
@@ -247,8 +250,8 @@ function update(timestamp) {
   if (player.animator.timepassed > player.animator.duration) {
     player.animator.timepassed = 0;
   }
-  let frame = Math.floor(player.animator.MaxFrames * player.animator.timepassed / player.animator.duration) // this line calculates the frame index player is currently at.
-  ctx.drawImage(player.animator.spriteSheet, frame * player.animator.width, 0, player.animator.width, player.animator.height, player.position.x, player.position.y - player.animator.height, player.animator.width, player.animator.height, player.hitbox.position.x, player.hitbox.position.y, player.hitbox.width, player.hitbox.height);
+  let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) // this line calculates the frame index player is currently at.
+  ctx.drawImage(player.animator.spriteSheet, frame * player.animator.width, 0, player.animator.width, player.animator.height, player.position.x, player.position.y - player.animator.height, player.animator.width, player.animator.height, player.position.x, player.position.y, player.hitbox.width, player.hitbox.height);
 
   }
 
@@ -256,4 +259,3 @@ function update(timestamp) {
 }
 
 
-ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
