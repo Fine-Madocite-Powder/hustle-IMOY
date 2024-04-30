@@ -73,10 +73,19 @@ let assetLoader = new AssetLoader([
 "Red/jumpLeft.png", 
 "Red/jumpRight.png", 
 "Red/runLeft.png", 
-"Red/runRight.png"])
+"Red/runRight.png",
+
+"RedMod/attackRight.png", 
+"RedMod/deathRight.png", 
+"RedMod/idleLeft.png", 
+"RedMod/idleRight.png", 
+"RedMod/jumpLeft.png", 
+"RedMod/jumpRight.png", 
+"RedMod/runLeft.png", 
+"RedMod/runRight.png"])
 assetLoader.load().then(() => {
 
-  players = [new Player(50,50, assetLoader, "Red"), new Player(100,50, assetLoader, "Red")]
+  players = [new Player(50,50, assetLoader, "Red"), new Player(100,50, assetLoader, "RedMod")]
   
   Animations = { // Data used in rendering and creating anim objects.
     runRight: {
