@@ -4,7 +4,7 @@ const background = new Image();
 background.src = "background.jpg"
 
 
-
+let players = [];
 let Animations = {};
 // let players = [new Player(50,50, assetLoader, "Red/IdleRedRight.png"), new Player(100,50, assetLoader, "RedMod/IdleRedLeft-modified.png")]
 const controls = {
@@ -21,12 +21,11 @@ const gravityForce = 1 //Gravity so the player falls smoothly//
 
 let keys = { }
 
-// Hello future me! You gotta store these inputs as a variable, and then have update() execute based on the variable.
 window.addEventListener("keydown", (event) => {
 
   keys[event.key] = true
 })
-window.addEventListener("keyup", (event) => {  //Event listener that listens to when you stop pressing a key to stop player 1 from moving//
+window.addEventListener("keyup", (event) => {
 
   keys[event.key] = false
 
@@ -65,56 +64,57 @@ class AssetLoader {
   }
 }
 
-let assetLoader = new AssetLoader(["background.jpg", "Red/JumpRedLeft.png", "Red/RunRedRight.png", "Red/RunRedLeft.png", "Red/IdleRedRight.png", "Red/IdleRedLeft.png", "Red/AttackRed.png", "Red/JumpRedRight.png", "RedMod/IdleRedLeft-modified.png"])
+let assetLoader = new AssetLoader([
+"background.jpg", 
+"Red/attackRight.png", 
+"Red/deathRight.png", 
+"Red/idleLeft.png", 
+"Red/idleRight.png", 
+"Red/jumpLeft.png", 
+"Red/jumpRight.png", 
+"Red/runLeft.png", 
+"Red/runRight.png"])
 assetLoader.load().then(() => {
 
-  let players = [new Player(50,50, assetLoader, "Red/IdleRedRight.png"), new Player(100,50, assetLoader, "RedMod/IdleRedLeft-modified.png")]
+  players = [new Player(50,50, assetLoader, "Red"), new Player(100,50, assetLoader, "Red")]
   
-  Animations = { // Stoppa in alla animationer i animations-objektet
+  Animations = { // Data used in rendering and creating anim objects.
     runRight: {
-      spriteSheet: assetLoader.getImage("Red/RunRedRight.png"),
       width: 34,
       height: 32,
       maxFrames: 8
     },
     runLeft: {
-      spriteSheet: assetLoader.getImage("Red/RunRedLeft.png"),
       width: 34,
       height: 32,
       maxFrames: 8
     },
     idleRight: {
-      spriteSheet: assetLoader.getImage("Red/IdleRedRight.png"),
       width: 34,
       height: 32,
       maxFrames: 6
     },
     idleLeft: {
-      spriteSheet: assetLoader.getImage("Red/IdleRedLeft.png"),
       width: 34,
       height: 32,
       maxFrames: 6
     },
     groundedAttackRight: {
-      spriteSheet: assetLoader.getImage("Red/AttackRed.png"),
       width:34,
       height: 32,
       maxFrames: 8
     },
     groundedAttackLeft: {
-      spriteSheet: assetLoader.getImage("Red/AttackRed.png"),
       width:34,
       height: 32,
       maxFrames: 8
     },
     jumpRight: {
-      spriteSheet: assetLoader.getImage("Red/JumpRedRight.png"),
       width:34,
       height:32,
       maxFrames: 8
     },
     jumpLeft: {
-      spriteSheet: assetLoader.getImage("Red/JumpRedLeft.png"),
       width:34,
       height:32,
       maxFrames: 8

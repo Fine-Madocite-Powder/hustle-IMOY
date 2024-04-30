@@ -4,7 +4,6 @@ class Player {
       this.color = color
       this.assetLoader = assetLoader;
       this.speed = 5;
-      this.state = "idle right";
       this.stun = 0; // Prevents the player from entering other commands while attacking or immediately after being struck by an attack. 
       this.velocity = { // The x and y coordinates below determine the direction the player will be displaced each frame. 
           x: 0,
@@ -45,7 +44,7 @@ class Player {
     
     this.animator = new Anim(
       Animations[animationName].maxFrames, 
-      assetLoader.getImage(`${color}/${animationName}.png`), 
+      this.assetLoader.getImage(`${this.color}/${animationName}.png`), 
       AnimationDuration, 
       Animations[animationName].width, 
       Animations[animationName].height, 
