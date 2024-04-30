@@ -235,10 +235,10 @@ function update(timestamp) {
     AnimationName += (player.lookDirection === 1) ? "Right" : "Left"
 
     
-    if (player.animator.name !== AnimationName){
-    player.ChangeAnimation(AnimationName, AnimationDuration) }
 
-    if (player.animator.name !== AnimationName)    player.ChangeAnimation(AnimationName, AnimationDuration) 
+    player.ChangeAnimation(AnimationName, AnimationDuration)
+
+    if (player.animator.name !== AnimationName) player.ChangeAnimation(AnimationName, AnimationDuration) 
 
   } else player.stun -= timestep;
 
