@@ -88,42 +88,22 @@ assetLoader.load().then(() => {
   players = [new Player(50,50, assetLoader, "Red"), new Player(100,50, assetLoader, "RedMod")]
   
   Animations = { // Data used in rendering and creating anim objects.
-    runRight: {
+    run: {
       width: 34,
       height: 32,
       maxFrames: 8
     },
-    runLeft: {
-      width: 34,
-      height: 32,
-      maxFrames: 8
-    },
-    idleRight: {
+    idle: {
       width: 34,
       height: 32,
       maxFrames: 6
     },
-    idleLeft: {
-      width: 34,
-      height: 32,
-      maxFrames: 6
-    },
-    groundedAttackRight: {
+    groundedAttack: {
       width:34,
       height: 32,
       maxFrames: 8
     },
-    groundedAttackLeft: {
-      width:34,
-      height: 32,
-      maxFrames: 8
-    },
-    jumpRight: {
-      width:34,
-      height:32,
-      maxFrames: 8
-    },
-    jumpLeft: {
+    jump: {
       width:34,
       height:32,
       maxFrames: 8
@@ -131,7 +111,7 @@ assetLoader.load().then(() => {
   }
 
   for (let player of players) {
-    player.ChangeAnimation("idleRight", 1400);
+    player.ChangeAnimation("idle", 1400);
   }
 
 
@@ -231,9 +211,6 @@ function update(timestamp) {
       AnimationDuration = 400
       AnimationName = "groundedAttack"
     }
-
-    AnimationName += (player.lookDirection === 1) ? "Right" : "Left"
-
     
 
     player.ChangeAnimation(AnimationName, AnimationDuration)
@@ -255,8 +232,6 @@ if (
   console.log("Collision detected between player and otherPlayer");
   // You can add whatever logic you need here when a collision is detected
 }
-
-
 
 
   player.animator.timepassed += timestep;

@@ -40,14 +40,16 @@ class Player {
 
   ChangeAnimation(animationName, AnimationDuration) {
 
-    if (this.animator.name !== animationName)
-    
+    if (this.animator.name !== animationName) {
+
+
     this.animator = new Anim(
       Animations[animationName].maxFrames, 
-      this.assetLoader.getImage(`${this.color}/${animationName}.png`), 
+      this.assetLoader.getImage(`${this.color}/${animationName}${(this.lookDirection === 1) ? "Right" : "Left"}.png`), 
       AnimationDuration, 
       Animations[animationName].width, 
       Animations[animationName].height, 
-      animationName )
+      animationName + (this.lookDirection === 1) ? "Right" : "Left")
+    }
   }
 }
