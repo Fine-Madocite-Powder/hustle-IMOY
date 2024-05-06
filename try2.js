@@ -3,6 +3,9 @@ const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 
+if(!(ctx instanceof CanvasRenderingContext2D)) {
+  throw new Error("Could not get canvas rendering context");
+}
 
 let players = [];
 let Animations = {};
@@ -148,6 +151,9 @@ function update(timestamp) {
        * The controls object is defined at the top. 
        * The effectiveCommands var is local, which I'm sure wont be a problem at all (cluegi)
       */
+
+    
+    
     let effectiveCommands = {}
     for (const command in controls) {
       if ( keys[  controls[command] [players.indexOf(player)]  ]) effectiveCommands[command] = true
@@ -182,7 +188,7 @@ function update(timestamp) {
    * 
   */
 
-  if (player.stun >= 0) { // The player does not have control of their character while stunned/performing an attack.
+  if (player.stun <= 0) { // The player does not have control of their character while stunned/performing an attack.
     
     let AnimationName;
     let AnimationDuration = 1800;
@@ -216,23 +222,33 @@ function update(timestamp) {
 
     player.ChangeAnimation(AnimationName, AnimationDuration)
 
-    if (player.animator.name !== AnimationName) player.ChangeAnimation(AnimationName, AnimationDuration) 
-
   } else player.stun -= timestep;
 
 
 
+  if (
+  (player.position.x < otherPlayer.position.x + otherPlayer.hitbox.width / 2 &&
+  player.position.x + player.hitbox.width / 2 > otherPlayer.position.x
+  )
+  && 
+  (player.position.y < otherPlayer.position.y + otherPlayer.hitbox.height &&
+  player.position.y + player.hitbox.height > otherPlayer.position.y)
+  ) console.log("this one works")
+
+
+
 // Compare hitboxes for collision detection
-if (
-  player.hitbox.position.x < otherPlayer.hitbox.position.x + otherPlayer.hitbox.width &&
-  player.hitbox.position.x + player.hitbox.width > otherPlayer.hitbox.position.x &&
-  player.hitbox.position.y < otherPlayer.hitbox.position.y + otherPlayer.hitbox.height &&
-  player.hitbox.position.y + player.hitbox.height > otherPlayer.hitbox.position.y
+/*if (
+  player.position.x < otherPlayer.position.x + otherPlayer.hitbox.width &&
+  player.position.x + player.hitbox.width > otherPlayer.position.x &&
+
+  player.position.y < otherPlayer.position.y + otherPlayer.hitbox.height &&
+  player.position.y + player.hitbox.height > otherPlayer.position.y
 ) {
   // Collision detected
   console.log("Collision detected between player and otherPlayer");
   // You can add whatever logic you need here when a collision is detected
-}
+}*/
 
 
   player.animator.timepassed += timestep;
@@ -240,11 +256,15 @@ if (
     player.animator.timepassed = 0;
   }
   let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) // this line calculates the frame index player is currently at.
-  ctx.drawImage(player.animator.spriteSheet, frame * player.animator.width, 0, player.animator.width, player.animator.height, player.position.x, player.position.y - player.animator.height, player.animator.width, player.animator.height, player.hitbox.position.x, player.hitbox.position.y, player.hitbox.width, player.hitbox.height);
-
+    
+  ctx.drawImage(player.animator.spriteSheet,
+    frame * player.animator.width, 0,
+    player.animator.width, player.animator.height,
+    player.position.x, player.position.y - player.animator.height,
+    player.animator.width, player.animator.height,
+  );
+  
   }
 
   requestAnimationFrame(update)
 }
-
-
