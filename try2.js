@@ -82,7 +82,8 @@ let assetLoader = new AssetLoader([
 "RedMod/jumpLeft.png", 
 "RedMod/jumpRight.png", 
 "RedMod/runLeft.png", 
-"RedMod/runRight.png"])
+"RedMod/runRight.png"
+])
 assetLoader.load().then(() => {
 
   players = [new Player(50,50, assetLoader, "Red"), new Player(100,50, assetLoader, "RedMod")]
@@ -145,7 +146,7 @@ function update(timestamp) {
 
       /* These three lines store the commands that the player currently considered has entered. 
        * The controls object is defined at the top. 
-       * The effectiveCommands var is local, and will reset each loop.
+       * The effectiveCommands var is local, which I'm sure wont be a problem at all (cluegi)
       */
     let effectiveCommands = {}
     for (const command in controls) {
@@ -153,7 +154,7 @@ function update(timestamp) {
     }
 
         /// PHYSICS AND FOUNDATIONAL LOGIC ///
-  if (!player.grounded) 
+  if (!player.grounded)
   player.velocity.y += gravityForce;
 
   player.position.x += player.velocity.x;
