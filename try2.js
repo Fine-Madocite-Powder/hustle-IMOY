@@ -115,8 +115,9 @@ assetLoader.load().then(() => {
   }
 
   for (let player of players) {
-    player.ChangeAnimation("idle", 1400);
+    player.ChangeAnimation("jump", 1400);
   }
+  
 
 
   requestAnimationFrame(update) 
@@ -193,7 +194,7 @@ function update(timestamp) {
     let AnimationName;
     let AnimationDuration = 1800;
 
-
+    if (player.grounded) {
     if (effectiveCommands.left === effectiveCommands.right) {
       player.velocity.x = 0;
       AnimationName = "idle"
@@ -206,6 +207,7 @@ function update(timestamp) {
       player.lookDirection = 1
       AnimationName = "run"
     } // Could probably be moved to a method in the player class, ask Ray
+  }
 
     if (effectiveCommands.jump) {
       player.Jump();
