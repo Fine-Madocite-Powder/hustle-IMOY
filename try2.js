@@ -2,14 +2,21 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
+const AttackAudio = document.getElementById('AttackAudio')
+
+const Gameaudio = document.getElementById('GameAudio');
+window.onload = function() {
+  Gameaudio.play()
+  Gameaudio.volume = 0.3
+}
+
 
 if(!(ctx instanceof CanvasRenderingContext2D)) {
   throw new Error("Could not get canvas rendering context");
 }
 
-let players = [];
+let players= []
 let Animations = {};
-// let players = [new Player(50,50, assetLoader, "Red/IdleRedRight.png"), new Player(100,50, assetLoader, "RedMod/IdleRedLeft-modified.png")]
 const controls = {
   left: ["a", "ArrowLeft"],
   right: ["d", "ArrowRight"],
@@ -219,10 +226,12 @@ function update(timestamp) {
       player.stun += 500;
       AnimationDuration = 400
       AnimationName = "groundedAttack"
+      play(AttackAudio)
     }
     
 
-    player.ChangeAnimation(AnimationName, AnimationDuration)
+    if(AnimationName)
+      player.ChangeAnimation(AnimationName, AnimationDuration)
 
   } else player.stun -= timestep;
 
