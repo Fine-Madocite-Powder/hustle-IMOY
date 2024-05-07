@@ -76,13 +76,14 @@ class AssetLoader {
 
 let assetLoader = new AssetLoader([
 "background.jpg", 
-"Red/attackRight.png", 
 "Red/deathRight.png", 
 "Red/idleLeft.png", 
 "Red/idleRight.png", 
 "Red/jumpLeft.png", 
 "Red/jumpRight.png", 
 "Red/runLeft.png", 
+"Red/groundedAttackRight.png",
+"Red/groundedAttackLeft.png",
 "Red/runRight.png",
 
 "RedMod/attackRight.png", 
@@ -118,6 +119,11 @@ assetLoader.load().then(() => {
       width:34,
       height:32,
       maxFrames: 8
+    },
+    groundedAttack: {
+      width: 34,
+      height: 32,
+      maxFrames: 3
     }
   }
 
@@ -223,8 +229,8 @@ function update(timestamp) {
     }
 
     if (effectiveCommands.attack && player.grounded) { 
-      player.stun += 500;
-      AnimationDuration = 400
+      player.stun += 100;
+      AnimationDuration = 250
       AnimationName = "groundedAttack"
       play(AttackAudio)
     }
