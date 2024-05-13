@@ -243,29 +243,19 @@ function update(timestamp) {
   } else player.stun -= timestep;
 
 
-
-  if (
-  (player.position.x < otherPlayer.position.x + otherPlayer.hitbox.width / 2 &&
-  player.position.x + player.hitbox.width / 2 > otherPlayer.position.x
-  )
-  && 
-  (player.position.y < otherPlayer.position.y + otherPlayer.hitbox.height &&
-  player.position.y + player.hitbox.height > otherPlayer.position.y)
-  ) console.log("this one works")
-
-
   player.animator.timepassed += timestep;
   if (player.animator.timepassed > player.animator.duration) {
     player.animator.timepassed = 0;
   }
-  let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) // this line calculates the frame index player is currently at.
+  let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) 
+  // this line calculates the frame index player is currently at.
   
-  if (frame === 1)
+  if (frame === 1)  
     
     switch (player.animator.name) {
       case "groundedAttackRight":
       case "groundedAttackLeft":
-        console.log("yeah you just attacked");
+        player.GroundedAttack(otherPlayer);
         break;
     
       default:

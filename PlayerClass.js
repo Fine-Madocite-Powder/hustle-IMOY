@@ -28,14 +28,40 @@ class Player {
   }
 
   Jump() {
-      if (this.grounded) {
-        this.velocity.y = -11;
-        this.grounded = false;
-      } else if (this.doubleJump && this.velocity.y > -6) { // The second condition is there to prevent both jumps from being consumed in successive frames, which felt like shit.
-        this.velocity.y = -9;
-        this.doubleJump = false;
-      }
+    if (this.grounded) {
+      this.velocity.y = -11;
+      this.grounded = false;
+    } else if (this.doubleJump && this.velocity.y > -6) { // The second condition is there to prevent both jumps from being consumed in successive frames, which felt like shit.
+      this.velocity.y = -9;
+      this.doubleJump = false;
     }
+  }
+
+  GroundedAttack(otherPlayer) {
+    
+    const atkhitbox = {
+      position: {
+        x: this.position.x + this.lookDirection * this.animator.width,
+        y: this.position.y
+      },
+      width: 34,
+      height: 40
+    }
+
+    if (
+      atkhitbox.position.x < otherPlayer.position.x + otherPlayer.hitbox.width / 2 &&
+      atkhitbox.position.x + atkhitbox.hitbox.width / 2 > otherPlayer.position.x
+    )
+
+    if (
+      this.position.x < otherPlayer.position.x + otherPlayer.hitbox.width / 2 &&
+      this.position.x + this.hitbox.width / 2 > otherPlayer.position.x
+      && 
+      this.position.y < otherPlayer.position.y + otherPlayer.hitbox.height &&
+      this.position.y + this.hitbox.height > otherPlayer.position.y
+    ) console.log("hit!")
+
+  }
 
   ChangeAnimation(animationName, AnimationDuration) {
 
