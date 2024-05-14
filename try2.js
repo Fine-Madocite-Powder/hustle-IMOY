@@ -95,6 +95,7 @@ let assetLoader = new AssetLoader([
 "RedMod/runLeft.png", 
 "RedMod/runRight.png"
 ])
+
 assetLoader.load().then(() => {
 
   players = [new Player(50,50, assetLoader, "Red"), new Player(100,50, assetLoader, "RedMod")]
