@@ -175,10 +175,10 @@ function update(timestamp) {
 
         /// PHYSICS AND FOUNDATIONAL LOGIC ///
   if (!player.grounded)
-  player.velocity.y += gravityForce;
+  player.velocity.y -= gravityForce;
 
   player.position.x += player.velocity.x;
-  player.position.y += player.velocity.y;
+  player.position.y -= player.velocity.y;
   // Moves the player along its trajectory
 
   if (player.position.y >= canvas.height) {
@@ -208,23 +208,26 @@ function update(timestamp) {
     let AnimationDuration = 1800;
 
     if (player.grounded) {
-    if (effectiveCommands.left === effectiveCommands.right) {
-      player.velocity.x = 0;
-      AnimationName = "idle"
-    } else if (effectiveCommands.left) {
-      player.velocity.x = -player.speed
-      player.lookDirection = -1
-      AnimationName = "run"
-    } else if (effectiveCommands.right) {
-      player.velocity.x = player.speed
-      player.lookDirection = 1
-      AnimationName = "run"
-    } // Could probably be moved to a method in the player class, ask Ray
-  }
+      
+        if (effectiveCommands.left === effectiveCommands.right) {
+        player.velocity.x = 0;
+        AnimationName = "idle"
+      
+      } else if (effectiveCommands.left) {
+        player.velocity.x = -player.speed
+        player.lookDirection = -1
+        AnimationName = "run"
+
+      } else if (effectiveCommands.right) {
+        player.velocity.x = player.speed
+        player.lookDirection = 1
+        AnimationName = "run"
+      } // Could probably be moved to a method in the player class, ask Ray
+    }
 
     if (effectiveCommands.jump) {
       player.Jump();
-      AnimationDuration = 1000;
+      AnimationDuration = 1000
       AnimationName = "jump"
     }
 
@@ -237,7 +240,7 @@ function update(timestamp) {
     }
     
 
-    if(AnimationName)
+    if (AnimationName) // Prevents an error where AnimationName is never given a value. undefined is considered falsy.
       player.ChangeAnimation(AnimationName, AnimationDuration)
 
   } else player.stun -= timestep;
