@@ -230,13 +230,6 @@ function update(timestamp) {
       AnimationName = "groundedAttack"
     }
 
-    //VICTORY//
-
-    if(otherPlayer.health <= 0) {
-      
-    }
-    
-
     if (AnimationName) // Prevents an error where AnimationName is never given a value. undefined is considered falsy.
       player.ChangeAnimation(AnimationName, AnimationDuration)
 
@@ -270,18 +263,18 @@ function update(timestamp) {
     player.animator.width, player.animator.height,
   );
   
+  if (player.health <= 0) requestAnimationFrame(endGame)
+
   }
 
   requestAnimationFrame(update)
 }
 
-function gameEnd (timestamp) {
+function endGame (timestamp) {
   Gameaudio.pause() 
   VictoryAudio.play()
   keys = {}
 
-  if (keys["Enter"]) 
+  if (keys["Enter"]) startGame()
   
-
-  requestAnimationFrame()
 }

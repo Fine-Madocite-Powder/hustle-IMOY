@@ -48,7 +48,7 @@ class Player {
 
     const atkhitbox = {
       position: {
-        x: this.position.x + this.lookDirection * this.hitbox.width / 2,
+        x: this.position.x + this.lookDirection * (this.hitbox.width / 2 - 5),
         y: this.position.y
       },
       width: 34,
@@ -63,13 +63,13 @@ class Player {
       atkhitbox.position.y + atkhitbox.height / 2 > otherPlayer.position.y
     ) {
 
-      otherPlayer.stun += 1000
+      otherPlayer.stun += 500
       otherPlayer.grounded = false;
       otherPlayer.velocity.y += 11;
       otherPlayer.velocity.x += 5 * this.lookDirection
       otherPlayer.health -= 1
 
-      
+
       console.log(otherPlayer.health)
     }
 
