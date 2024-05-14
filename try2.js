@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 const AttackAudio = document.getElementById('AttackAudio')
+const VictoryAudio = document.getElementById('Victory')
 
 const Gameaudio = document.getElementById('GameAudio');
 window.onload = function() {
@@ -76,6 +77,7 @@ class AssetLoader {
 
 let assetLoader = new AssetLoader([
 "background.jpg", 
+"Red/deathLeft.png",
 "Red/deathRight.png", 
 "Red/idleLeft.png", 
 "Red/idleRight.png", 
@@ -86,7 +88,9 @@ let assetLoader = new AssetLoader([
 "Red/groundedAttackLeft.png",
 "Red/runRight.png",
 
-"RedMod/attackRight.png", 
+"RedMod/deathLeft.png",
+"RedMod/groundedAttackLeft.png",
+"RedMod/groundedAttackRight.png", 
 "RedMod/deathRight.png", 
 "RedMod/idleLeft.png", 
 "RedMod/idleRight.png", 
@@ -96,9 +100,17 @@ let assetLoader = new AssetLoader([
 "RedMod/runRight.png"
 ])
 
+function startGame() {
+  players = [new Player(50, 50, assetLoader, "Red"), new Player(200, 50, assetLoader, "RedMod")]
+
+  for (let player of players) {
+    player.ChangeAnimation("jump", 1400);
+  }
+}
+
+
 assetLoader.load().then(() => {
 
-  players = [new Player(50,50, assetLoader, "Red"), new Player(100,50, assetLoader, "RedMod")]
   
   Animations = { // Data used in rendering and creating anim objects.
     run: {
@@ -127,12 +139,6 @@ assetLoader.load().then(() => {
       maxFrames: 3
     }
   }
-
-  for (let player of players) {
-    player.ChangeAnimation("jump", 1400);
-  }
-  
-
 
   requestAnimationFrame(update) 
   // After having loaded all images, put them into the assetLoader library, 
@@ -192,17 +198,6 @@ function update(timestamp) {
   if (player.position.x > canvas.width - player.animator.width) player.position.x = canvas.width - player.animator.width;
 
 
-  /* Available commands are left, right, jump, and attack, all in lower case.
-   * 
-   * 
-   * Left + right => still
-   * side => move in chosen direction at constant pace
-   * jump => I think you can figure this one out..
-   * 
-   * 
-   * 
-  */
-
   if (player.stun <= 0) { // The player does not have control of their character while stunned/performing an attack.
     
     let AnimationName;
@@ -236,8 +231,12 @@ function update(timestamp) {
       player.stun += 200;
       AnimationDuration = 250
       AnimationName = "groundedAttack"
-      if (AttackAudio.currentTime > 0.25 && !AttackAudio.paused) AttackAudio.currentTime = 0
-      else AttackAudio.play()
+    }
+
+    //VICTORY//
+
+    if(otherPlayer.health <= 0) {
+      
     }
     
 
@@ -254,12 +253,13 @@ function update(timestamp) {
   let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) 
   // this line calculates the frame index player is currently at.
   
-  if (frame === 1)  
+  if (frame === 1 && player.attackReady)
     
     switch (player.animator.name) {
       case "groundedAttackRight":
       case "groundedAttackLeft":
         player.GroundedAttack(otherPlayer);
+        player.attackReady = false
         break;
     
       default:
@@ -276,4 +276,15 @@ function update(timestamp) {
   }
 
   requestAnimationFrame(update)
+}
+
+function gameEnd (timestamp) {
+  Gameaudio.pause() 
+  VictoryAudio.play()
+  keys = {}
+
+  if (keys["Enter"]) 
+  
+
+  requestAnimationFrame()
 }

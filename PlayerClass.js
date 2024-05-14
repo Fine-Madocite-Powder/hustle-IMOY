@@ -1,6 +1,7 @@
 class Player {
   constructor(x, y, assetLoader, color) {
       this.health = 10;
+      this.attackReady = true;
       this.color = color
       this.assetLoader = assetLoader;
       this.speed = 4;
@@ -31,14 +32,20 @@ class Player {
     if (this.grounded) {
       this.velocity.y = 11;
       this.grounded = false;
-    } else if (this.doubleJump && this.velocity.y < 6) { // The second condition is there to prevent both jumps from being consumed in successive frames, which felt like shit.
+    } else if (this.doubleJump && this.velocity.y < 6) { 
+      // The second condition is there to prevent both jumps from 
+      // being consumed in successive frames, which felt like shit.
       this.velocity.y = 9;
       this.doubleJump = false;
     }
   }
 
   GroundedAttack(otherPlayer) {
-    
+    this.attackReady = false
+
+    if (AttackAudio.currentTime > 0.25 && !AttackAudio.paused) AttackAudio.currentTime = 0
+    else AttackAudio.play()
+
     const atkhitbox = {
       position: {
         x: this.position.x + this.lookDirection * this.hitbox.width / 2,
@@ -50,26 +57,26 @@ class Player {
 
     if (
       atkhitbox.position.x < otherPlayer.position.x + otherPlayer.hitbox.width / 2 &&
-      atkhitbox.position.x + atkhitbox.width / 2 > otherPlayer.position.x
+      atkhitbox.position.x + atkhitbox.width / 2 > otherPlayer.position.x 
       &&
       atkhitbox.position.y < otherPlayer.position.y + otherPlayer.hitbox.height / 2 &&
       atkhitbox.position.y + atkhitbox.height / 2 > otherPlayer.position.y
     ) {
+
+      otherPlayer.stun += 1000
       otherPlayer.grounded = false;
       otherPlayer.velocity.y += 11;
       otherPlayer.velocity.x += 5 * this.lookDirection
+      otherPlayer.health -= 1;
+
       console.log("hit")
+      console.log(otherPlayer.health)
     }
 
-    // if (
-    //   this.position.x < otherPlayer.position.x + otherPlayer.hitbox.width / 2 &&
-    //   this.position.x + this.hitbox.width / 2 > otherPlayer.position.x
-    //   && 
-    //   this.position.y < otherPlayer.position.y + otherPlayer.hitbox.height &&
-    //   this.position.y + this.hitbox.height > otherPlayer.position.y
-    // ) console.log("hit!")
+
 
   }
+
 
   ChangeAnimation(animationName, AnimationDuration) {
 
