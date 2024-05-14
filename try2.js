@@ -134,12 +134,13 @@ function startGame() {
   for (let player of players) {
     player.ChangeAnimation("jump", 1400);
   }
+
+  requestAnimationFrame(update) 
 }
 
 
 assetLoader.load().then(() => {
   startGame()
-  requestAnimationFrame(update) 
   // After having loaded all images, put them into the assetLoader library and run the game
 })
 
