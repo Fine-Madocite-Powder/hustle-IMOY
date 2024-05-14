@@ -6,10 +6,10 @@ const AttackAudio = document.getElementById('AttackAudio')
 const VictoryAudio = document.getElementById('Victory')
 
 const Gameaudio = document.getElementById('GameAudio');
-window.onload = function() {
-  Gameaudio.play()
-  Gameaudio.volume = 0.3
-}
+// window.onload = function() {
+//   Gameaudio.play()
+//   Gameaudio.volume = 0.3
+// }
 
 
 if(!(ctx instanceof CanvasRenderingContext2D)) {
