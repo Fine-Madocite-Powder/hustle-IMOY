@@ -138,11 +138,12 @@ function startGame() {
 
 
 assetLoader.load().then(() => {
+  startGame()
   requestAnimationFrame(update) 
   // After having loaded all images, put them into the assetLoader library and run the game
 })
 
-let counter = true;
+
 function update(timestamp) {
 
         /// TIME ///
