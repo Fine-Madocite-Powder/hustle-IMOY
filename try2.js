@@ -47,10 +47,10 @@ Animations = { // Data used in rendering and creating anim objects.
 }
 
 const controls = {
-  left: ["a", "ArrowLeft"],
-  right: ["d", "ArrowRight"],
-  jump: ["w", "ArrowUp"],
-  attack: ["f", "-"]
+  left: ["KeyA", "ArrowLeft"],
+  right: ["KeyD", "ArrowRight"],
+  jump: ["KeyW", "ArrowUp"],
+  attack: ["KeyF", "Slash"]
 }
 
 let lastTimestamp = 0,
@@ -62,11 +62,12 @@ let keys = { }
 
 window.addEventListener("keydown", (event) => {
 
-  keys[event.key] = true
+  keys[event.code] = true
+
 })
 window.addEventListener("keyup", (event) => {
 
-  keys[event.key] = false
+  keys[event.code] = false
 
 }) 
 
@@ -260,18 +261,14 @@ function update(timestamp) {
       player.animator.width, player.animator.height,
     );
     
-    if (player.health <= 0) requestAnimationFrame(endGame)
+
   }
 
-  requestAnimationFrame(update)
+  (players[1].health > 0 && players[0].health > 0) ? requestAnimationFrame(update) : () => { requestAnimationFrame(endGame); keys = {}; }
 }
 
-function endGame (timestamp) {
+function endGame () {
   Gameaudio.pause()
-  VictoryAudio.play()
-  keys = {}
 
-  if (keys["Enter"]) startGame()
-
-  requestAnimationFrame(endGame)
+  keys["Enter"] ? startGame() : requestAnimationFrame(endGame)
 }
