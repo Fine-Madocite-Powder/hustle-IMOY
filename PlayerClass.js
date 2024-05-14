@@ -63,10 +63,12 @@ class Player {
       atkhitbox.position.y + atkhitbox.height / 2 > otherPlayer.position.y
     ) {
 
-      otherPlayer.stun += 500
+
+      otherPlayer.stun += 400
+
       otherPlayer.grounded = false;
-      otherPlayer.velocity.y += 11;
-      otherPlayer.velocity.x += 5 * this.lookDirection
+      otherPlayer.velocity.y -= 20;
+      otherPlayer.velocity.x += 2 * this.lookDirection
       otherPlayer.health -= 1
 
 
