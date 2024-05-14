@@ -17,7 +17,35 @@ if(!(ctx instanceof CanvasRenderingContext2D)) {
 }
 
 let players= []
-let Animations = {};
+
+Animations = { // Data used in rendering and creating anim objects.
+  run: {
+    width: 34,
+    height: 32,
+    maxFrames: 8
+  },
+  idle: {
+    width: 34,
+    height: 32,
+    maxFrames: 6
+  },
+  groundedAttack: {
+    width:34,
+    height: 32,
+    maxFrames: 8
+  },
+  jump: {
+    width:34,
+    height:32,
+    maxFrames: 8
+  },
+  groundedAttack: {
+    width: 34,
+    height: 32,
+    maxFrames: 3
+  }
+}
+
 const controls = {
   left: ["a", "ArrowLeft"],
   right: ["d", "ArrowRight"],
@@ -110,39 +138,8 @@ function startGame() {
 
 
 assetLoader.load().then(() => {
-
-  
-  Animations = { // Data used in rendering and creating anim objects.
-    run: {
-      width: 34,
-      height: 32,
-      maxFrames: 8
-    },
-    idle: {
-      width: 34,
-      height: 32,
-      maxFrames: 6
-    },
-    groundedAttack: {
-      width:34,
-      height: 32,
-      maxFrames: 8
-    },
-    jump: {
-      width:34,
-      height:32,
-      maxFrames: 8
-    },
-    groundedAttack: {
-      width: 34,
-      height: 32,
-      maxFrames: 3
-    }
-  }
-
   requestAnimationFrame(update) 
-  // After having loaded all images, put them into the assetLoader library, 
-  // and written the Animations object, start the Update function for the first time.
+  // After having loaded all images, put them into the assetLoader library and run the game
 })
 
 let counter = true;
