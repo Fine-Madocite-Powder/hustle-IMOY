@@ -67,9 +67,9 @@ class Player {
       otherPlayer.grounded = false;
       otherPlayer.velocity.y += 11;
       otherPlayer.velocity.x += 5 * this.lookDirection
-      otherPlayer.health -= 1;
+      otherPlayer.health -= 1
 
-      console.log("hit")
+      
       console.log(otherPlayer.health)
     }
 

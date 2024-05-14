@@ -179,8 +179,7 @@ function update(timestamp) {
     }
 
         /// PHYSICS AND FOUNDATIONAL LOGIC ///
-  if (!player.grounded)
-  player.velocity.y -= gravityForce;
+  if (!player.grounded) player.velocity.y -= gravityForce;
 
   player.position.x += player.velocity.x;
   player.position.y -= player.velocity.y;
@@ -252,17 +251,17 @@ function update(timestamp) {
   // this line calculates the frame index player is currently at.
   
   if (frame === 1 && player.attackReady)
-    
-    switch (player.animator.name) {
-      case "groundedAttackRight":
-      case "groundedAttackLeft":
-        player.GroundedAttack(otherPlayer);
-        player.attackReady = false
-        break;
-    
-      default:
-        break;
-    } 
+  switch (player.animator.name) {
+    case "groundedAttackRight":
+    case "groundedAttackLeft":
+      player.GroundedAttack(otherPlayer);
+      player.attackReady = false
+      break;
+  
+    default:
+    break;
+  }
+  else if (frame === 2) player.attackReady = true
 
   ctx.drawImage(player.animator.spriteSheet,
     frame * player.animator.width, 0,
