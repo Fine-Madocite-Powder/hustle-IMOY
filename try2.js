@@ -134,12 +134,13 @@ function startGame() {
   for (let player of players) {
     player.ChangeAnimation("jump", 1400);
   }
+
+  requestAnimationFrame(update) 
 }
 
 
 assetLoader.load().then(() => {
   startGame()
-  requestAnimationFrame(update) 
   // After having loaded all images, put them into the assetLoader library and run the game
 })
 
@@ -159,121 +160,118 @@ function update(timestamp) {
 
   for (let i = 0; i < players.length; i++) {
     
-    // Defining both players
-    let player = players[i];
-    let otherPlayer;
-    otherPlayer = players.indexOf(player) ? players[0] : players[1]
-    // If we are currently calculating for player 1 (index 0), the statement will evaluate to falsy.
+      // Defining both players
+      let player = players[i];
+      let otherPlayer;
+      otherPlayer = players.indexOf(player) ? players[0] : players[1]
+      // If we are currently calculating for player 1 (index 0), the statement will evaluate to falsy.
 
 
-      /* These three lines store the commands that the player currently considered has entered. 
-       * The controls object is defined at the top. 
-       * The effectiveCommands var is local, which I'm sure wont be a problem at all (cluegi)
-      */
-
-    
-    
-    let effectiveCommands = {}
-    for (const command in controls) {
-      if ( keys[  controls[command] [players.indexOf(player)]  ]) effectiveCommands[command] = true
-    }
-
-        /// PHYSICS AND FOUNDATIONAL LOGIC ///
-  if (!player.grounded) player.velocity.y -= gravityForce;
-
-  player.position.x += player.velocity.x;
-  player.position.y -= player.velocity.y;
-  // Moves the player along its trajectory
-
-  if (player.position.y >= canvas.height) {
-    player.position.y = canvas.height;
-    player.grounded = true;
-    player.doubleJump = true;
-    // When the player is on the ground, keep it there and refresh the jump states.
-  }
-  if (player.position.x < 0) player.position.x = 0;
-  if (player.position.x > canvas.width - player.animator.width) player.position.x = canvas.width - player.animator.width;
-
-
-  if (player.stun <= 0) { // The player does not have control of their character while stunned/performing an attack.
-    
-    let AnimationName;
-    let AnimationDuration = 1800;
-
-    if (player.grounded) {
+        // These three lines store the commands that the player currently considered has entered. 
+        // The controls object is defined at the top. 
       
-        if (effectiveCommands.left === effectiveCommands.right) {
-        player.velocity.x = 0;
-        AnimationName = "idle"
+      let effectiveCommands = {}
+      for (const command in controls) {
+        if ( keys[  controls[command] [players.indexOf(player)]  ]) effectiveCommands[command] = true
+      }
+
+          /// PHYSICS AND FOUNDATIONAL LOGIC ///
+    if (!player.grounded) player.velocity.y -= gravityForce;
+
+    player.position.x += player.velocity.x;
+    player.position.y -= player.velocity.y;
+    // Moves the player along its trajectory
+
+    if (player.position.y >= canvas.height) {
+      player.position.y = canvas.height;
+      player.grounded = true;
+      player.doubleJump = true;
+      // When the player is on the ground, keep it there and refresh the jump states.
+    }
+    if (player.position.x < 0) player.position.x = 0;
+    if (player.position.x > canvas.width - player.animator.width) player.position.x = canvas.width - player.animator.width;
+
+
+    if (player.stun <= 0) { // The player does not have control of their character while stunned/performing an attack.
       
-      } else if (effectiveCommands.left) {
-        player.velocity.x = -player.speed
-        player.lookDirection = -1
-        AnimationName = "run"
+      let AnimationName;
+      let AnimationDuration = 1800;
 
-      } else if (effectiveCommands.right) {
-        player.velocity.x = player.speed
-        player.lookDirection = 1
-        AnimationName = "run"
-      } // Could probably be moved to a method in the player class, ask Ray
+      if (player.grounded) {
+        
+          if (effectiveCommands.left === effectiveCommands.right) {
+          player.velocity.x = 0;
+          AnimationName = "idle"
+        
+        } else if (effectiveCommands.left) {
+          player.velocity.x = -player.speed
+          player.lookDirection = -1
+          AnimationName = "run"
+
+        } else if (effectiveCommands.right) {
+          player.velocity.x = player.speed
+          player.lookDirection = 1
+          AnimationName = "run"
+        } // Could probably be moved to a method in the player class, ask Ray
+      }
+
+      if (effectiveCommands.jump) {
+        player.Jump();
+        AnimationDuration = 1000
+        AnimationName = "jump"
+      }
+
+      if (effectiveCommands.attack && player.grounded) { 
+        player.stun += 200;
+        AnimationDuration = 250
+        AnimationName = "groundedAttack"
+      }
+
+      if (AnimationName) // Prevents an error where AnimationName is never given a value. undefined is considered falsy.
+        player.ChangeAnimation(AnimationName, AnimationDuration)
+
+    } else player.stun -= timestep;
+
+
+    player.animator.timepassed += timestep;
+    if (player.animator.timepassed > player.animator.duration) {
+      player.animator.timepassed = 0;
     }
-
-    if (effectiveCommands.jump) {
-      player.Jump();
-      AnimationDuration = 1000
-      AnimationName = "jump"
-    }
-
-    if (effectiveCommands.attack && player.grounded) { 
-      player.stun += 200;
-      AnimationDuration = 250
-      AnimationName = "groundedAttack"
-    }
-
-    if (AnimationName) // Prevents an error where AnimationName is never given a value. undefined is considered falsy.
-      player.ChangeAnimation(AnimationName, AnimationDuration)
-
-  } else player.stun -= timestep;
-
-
-  player.animator.timepassed += timestep;
-  if (player.animator.timepassed > player.animator.duration) {
-    player.animator.timepassed = 0;
-  }
-  let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) 
-  // this line calculates the frame index player is currently at.
-  
-  if (frame === 1 && player.attackReady)
-  switch (player.animator.name) {
-    case "groundedAttackRight":
-    case "groundedAttackLeft":
-      player.GroundedAttack(otherPlayer);
-      player.attackReady = false
+    let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) 
+    // this line calculates the frame index player is currently at.
+    
+    if (frame === 1 && player.attackReady)
+    switch (player.animator.name) {
+      case "groundedAttackRight":
+      case "groundedAttackLeft":
+        player.GroundedAttack(otherPlayer);
+        player.attackReady = false
+        break;
+    
+      default:
       break;
-  
-    default:
-    break;
-  }
-  else if (frame === 2) player.attackReady = true
+    }
+    else if (frame === 2) player.attackReady = true
 
-  ctx.drawImage(player.animator.spriteSheet,
-    frame * player.animator.width, 0,
-    player.animator.width, player.animator.height,
-    player.position.x, player.position.y - player.animator.height,
-    player.animator.width, player.animator.height,
-  );
-  
-  if (player.health <= 0) requestAnimationFrame(endGame)
-
+    ctx.drawImage(player.animator.spriteSheet,
+      frame * player.animator.width, 0,
+      player.animator.width, player.animator.height,
+      player.position.x, player.position.y - player.animator.height,
+      player.animator.width, player.animator.height,
+    );
+    
+    if (player.health <= 0) requestAnimationFrame(endGame)
   }
 
   requestAnimationFrame(update)
 }
 
 function endGame (timestamp) {
-  Gameaudio.pause() 
+  Gameaudio.pause()
+  VictoryAudio.play()
   keys = {}
 
   if (keys["Enter"]) startGame()
-  
+
+  requestAnimationFrame(endGame)
 }
