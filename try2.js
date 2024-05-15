@@ -43,6 +43,11 @@ Animations = { // Data used in rendering and creating anim objects.
     width: 34,
     height: 32,
     maxFrames: 3
+  },
+  death: {
+    widht: 34,
+    height: 32,
+    maxFrames: 8
   }
 }
 
@@ -269,49 +274,50 @@ function update(timestamp) {
     requestAnimationFrame(update)
   } else {
 
-    requestAnimationFrame(gameController.endGame)
+    requestAnimationFrame(endGame)
     if (players[0].health === 0) {
       gameController.loser = players[0]
     } else {
       gameController.loser = players[1]
     }
 
-    gameController.loser.ChangeAnimation("idle", 3000)
+    gameController.loser.ChangeAnimation("death", 3000)
+
+console.log(gameController.loser.animator)
 
     keys = {}
     Gameaudio.pause()
     VictoryAudio.play()
+
   }
 }
 
 var gameController = {
+  loser: null
+}
 
-  
+function endGame (timestamp) {
 
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
 
-  endGame (timestamp) {
-
-    console.log(this.loser)
-
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
-
-    if (this.loser.animator.timepassed < this.loser.animator.duration && !(this.deathIsFinished)) {
-      this.loser.animator.timepassed += timestamp
-    }
-
-    let frame = Math.floor(this.loser.animator.maxFrames * this.loser.animator.timepassed / this.loser.animator.duration) 
-    
-    ctx.drawImage(this.loser.animator.spriteSheet,
-    frame * this.loser.animator.frameWidth, 0,
-    this.loser.animator.frameWidth, this.loser.animator.height,
-    this.loser.position.x, this.loser.position.y - this.loser.animator.height,
-    this.loser.animator.frameWidth, this.loser.animator.height,
-    )
-  
-  
-  
-  
-    keys["Enter"] ? startGame() : requestAnimationFrame(endGame)
-  
+  if (gameController.loser.animator.timepassed < gameController.loser.animator.duration && !(gameController.deathIsFinished)) {
+    gameController.loser.animator.timepassed += timestamp
   }
+
+  let frame = Math.floor(gameController.loser.animator.maxFrames * gameController.loser.animator.timepassed / gameController.loser.animator.duration) 
+ 
+  console.log(frame)
+  
+  ctx.drawImage(gameController.loser.animator.spriteSheet,
+  frame * gameController.loser.animator.frameWidth, 0,
+  gameController.loser.animator.frameWidth, gameController.loser.animator.height,
+  gameController.loser.position.x, gameController.loser.position.y - gameController.loser.animator.height,
+  gameController.loser.animator.frameWidth, gameController.loser.animator.height,
+  )
+
+
+
+
+  keys["Enter"] ? startGame() : requestAnimationFrame(endGame)
+
 }
