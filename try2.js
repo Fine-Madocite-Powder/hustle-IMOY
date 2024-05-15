@@ -5,6 +5,7 @@ background.src = "background.jpg"
 const AttackAudio = document.getElementById('AttackAudio')
 const VictoryAudio = document.getElementById('Victory')
 
+
 const Gameaudio = document.getElementById('GameAudio');
 window.onload = function() {
   Gameaudio.play()
@@ -146,6 +147,7 @@ assetLoader.load().then(() => {
 })
 
 
+
 function update(timestamp) {
 
         /// TIME ///
@@ -275,14 +277,12 @@ function update(timestamp) {
     } else {
       gameController.loser = players[1]
     }
-
     gameController.loser.ChangeAnimation("idle", 3000)
 
     keys = {}
-    Gameaudio.pause()
-    VictoryAudio.play()
   }
 }
+
 
 var gameController = {
 
@@ -307,8 +307,7 @@ var gameController = {
     this.loser.position.x, this.loser.position.y - this.loser.animator.height,
     this.loser.animator.frameWidth, this.loser.animator.height,
     )
-  
-  
+    
   
   
     keys["Enter"] ? startGame() : requestAnimationFrame(endGame)
