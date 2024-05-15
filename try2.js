@@ -5,6 +5,7 @@ background.src = "background.jpg"
 const AttackAudio = document.getElementById('AttackAudio')
 const VictoryAudio = document.getElementById('Victory')
 
+let hasPlayed = false
 
 const Gameaudio = document.getElementById('GameAudio');
 window.onload = function() {
@@ -288,9 +289,6 @@ function update(timestamp) {
 console.log(gameController.loser.animator)
 
     keys = {}
-    Gameaudio.pause()
-    VictoryAudio.play()
-
   }
 }
 
@@ -317,7 +315,8 @@ function endGame (timestamp) {
   gameController.loser.position.x, gameController.loser.position.y - gameController.loser.animator.height,
   gameController.loser.animator.frameWidth, gameController.loser.animator.height,
   )
-
+  Gameaudio.pause()
+  VictoryAudio.play()
 
 
 
