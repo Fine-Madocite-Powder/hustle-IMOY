@@ -297,6 +297,7 @@ function update(timestamp) {
     keys = {}
     Gameaudio.pause()
     VictoryAudio.play()
+
   }
 }
 
@@ -337,7 +338,8 @@ lastTimestamp = timestamp
   gameController.loser.position.x, gameController.loser.position.y - gameController.loser.animator.height,
   gameController.loser.animator.frameWidth, gameController.loser.animator.height,
   )
-
+  Gameaudio.pause()
+  VictoryAudio.play()
 
 
 
