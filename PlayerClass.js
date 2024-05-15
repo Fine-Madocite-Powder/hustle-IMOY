@@ -1,6 +1,6 @@
 class Player {
   constructor(x, y, assetLoader, color) {
-      this.health = 10;
+      this.health = 100;
       this.attackReady = true;
       this.color = color
       this.assetLoader = assetLoader;
@@ -65,9 +65,8 @@ class Player {
 
 
       otherPlayer.stun += 400
-
       otherPlayer.grounded = false;
-      otherPlayer.velocity.y -= 20;
+      otherPlayer.velocity.y = 9;
       otherPlayer.velocity.x += 2 * this.lookDirection
       otherPlayer.health -= 1
 
