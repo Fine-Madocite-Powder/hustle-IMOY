@@ -67,16 +67,10 @@ class Player {
       otherPlayer.stun += 400
 
       otherPlayer.grounded = false;
-      otherPlayer.velocity.y -= 20;
-      otherPlayer.velocity.x += 2 * this.lookDirection
+      otherPlayer.velocity.y = 8;
+      otherPlayer.velocity.x += 3 * this.lookDirection
       otherPlayer.health -= 1
-
-
-      console.log(otherPlayer.health)
     }
-
-
-
   }
 
 
