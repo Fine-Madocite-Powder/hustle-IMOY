@@ -92,6 +92,7 @@ class Player {
       Animations[animationName].width, 
       Animations[animationName].height, 
       animationName + ((this.lookDirection === 1) ? "Right" : "Left"))
+    
     }
   }
 }

@@ -1,6 +1,6 @@
 class Anim {
-  constructor(maxFrames, spriteSheet, duration, width, height, name) {
-      this.width = width; 
+  constructor(maxFrames, spriteSheet, duration, frameWidth, height, name) {
+      this.frameWidth = frameWidth; 
       this.name = name;   // As spritesheets seemingly cannot be compared (tried "if (spriteSheet1 !== spriteSheet")"),
                           // the name variable will instead be used to make sure the timepassed variable below is not re-set
                           // to 0 each time the updater judges that the animation should continue playing.

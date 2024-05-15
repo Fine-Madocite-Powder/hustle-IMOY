@@ -1,9 +1,9 @@
 canvas {
-    position: fixed; 
+    position: fixed;
     z-index: 2;
     display: block;
-    width:60%;
-    image-rendering: pixelated; 
+    height: 90%;
+    image-rendering: pixelated;
 }
 
 

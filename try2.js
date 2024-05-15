@@ -190,7 +190,7 @@ function update(timestamp) {
       // When the player is on the ground, keep it there and refresh the jump states.
     }
     if (player.position.x < 0) player.position.x = 0;
-    if (player.position.x > canvas.width - player.animator.width) player.position.x = canvas.width - player.animator.width;
+    if (player.position.x > canvas.width - player.animator.frameWidth) player.position.x = canvas.width - player.animator.frameWidth;
 
 
     if (player.stun <= 0) { // The player does not have control of their character while stunned/performing an attack.
@@ -228,6 +228,7 @@ function update(timestamp) {
         AnimationName = "groundedAttack"
       }
 
+
       if (AnimationName) // Prevents an error where AnimationName is never given a value. undefined is considered falsy.
         player.ChangeAnimation(AnimationName, AnimationDuration)
 
@@ -255,20 +256,62 @@ function update(timestamp) {
     else if (frame === 2) player.attackReady = true
 
     ctx.drawImage(player.animator.spriteSheet,
-      frame * player.animator.width, 0,
-      player.animator.width, player.animator.height,
+      frame * player.animator.frameWidth, 0,
+      player.animator.frameWidth, player.animator.height,
       player.position.x, player.position.y - player.animator.height,
-      player.animator.width, player.animator.height,
+      player.animator.frameWidth, player.animator.height,
     );
     
 
   }
 
-  (players[1].health > 0 && players[0].health > 0) ? requestAnimationFrame(update) : () => { requestAnimationFrame(endGame); keys = {}; }
+  if (players[1].health > 0 && players[0].health > 0) {
+    requestAnimationFrame(update)
+  } else {
+
+    requestAnimationFrame(gameController.endGame)
+    if (players[0].health === 0) {
+      gameController.loser = players[0]
+    } else {
+      gameController.loser = players[1]
+    }
+
+    gameController.loser.ChangeAnimation("idle", 3000)
+
+    keys = {}
+    Gameaudio.pause()
+    VictoryAudio.play()
+  }
 }
 
-function endGame () {
-  Gameaudio.pause()
+var gameController = {
 
-  keys["Enter"] ? startGame() : requestAnimationFrame(endGame)
+  
+
+
+  endGame (timestamp) {
+
+    console.log(this.loser)
+
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
+
+    if (this.loser.animator.timepassed < this.loser.animator.duration && !(this.deathIsFinished)) {
+      this.loser.animator.timepassed += timestamp
+    }
+
+    let frame = Math.floor(this.loser.animator.maxFrames * this.loser.animator.timepassed / this.loser.animator.duration) 
+    
+    ctx.drawImage(this.loser.animator.spriteSheet,
+    frame * this.loser.animator.frameWidth, 0,
+    this.loser.animator.frameWidth, this.loser.animator.height,
+    this.loser.position.x, this.loser.position.y - this.loser.animator.height,
+    this.loser.animator.frameWidth, this.loser.animator.height,
+    )
+  
+  
+  
+  
+    keys["Enter"] ? startGame() : requestAnimationFrame(endGame)
+  
+  }
 }
