@@ -2,9 +2,10 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
+
 const AttackAudio = document.getElementById('AttackAudio')
 const VictoryAudio = document.getElementById('Victory')
-
+VictoryAudio.loop = false
 
 const Gameaudio = document.getElementById('GameAudio');
 window.onload = function() {
@@ -290,7 +291,6 @@ console.log(gameController.loser.animator)
     keys = {}
     Gameaudio.pause()
     VictoryAudio.play()
-
   }
 }
 
