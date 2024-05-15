@@ -43,7 +43,7 @@ Animations = { // Data used in rendering and creating anim objects.
     maxFrames: 3
   },
   death: {
-    widht: 34,
+    width: 34,
     height: 32,
     maxFrames: 8
   }
@@ -133,7 +133,9 @@ let assetLoader = new AssetLoader([
 ])
 
 function startGame() {
-  players = [new Player(50, 50, assetLoader, "Red"), new Player(200, 50, assetLoader, "RedMod")]
+  players = [
+  new Player(50, 50, assetLoader, "Red"), 
+  new Player(200, 50, assetLoader, "RedMod")]
 
   for (let player of players) {
     player.ChangeAnimation("jump", 1400);
@@ -250,16 +252,22 @@ function update(timestamp) {
     // this line calculates the frame index player is currently at.
     
     if (frame === 1 && player.attackReady)
-    switch (player.animator.name) {
-      case "groundedAttackRight":
-      case "groundedAttackLeft":
-        player.GroundedAttack(otherPlayer);
-        player.attackReady = false
+
+      switch (player.animator.name) {
+        case "groundedAttackRight":
+        case "groundedAttackLeft":
+          player.GroundedAttack(otherPlayer);
+          player.attackReady = false
+          break;
+        
+        case "airAttackRight":
+        case "airAttackLeft":
         break;
-    
-      default:
-      break;
-    }
+
+        default:
+        break;
+      }
+
     else if (frame === 2) player.attackReady = true
 
     ctx.drawImage(player.animator.spriteSheet,
@@ -285,8 +293,6 @@ function update(timestamp) {
 
     gameController.loser.ChangeAnimation("death", 3000)
 
-console.log(gameController.loser.animator)
-
     keys = {}
     Gameaudio.pause()
     Gameaudio.currentTime = 0
@@ -299,15 +305,32 @@ var gameController = {
   loser: null
 }
 
-function endGame(timestamp) {
+function endGame (timestamp) {
+
+  if (timestamp - lastTimestamp < timestep) {
+    // Only continue if one timestep (1000/15 ms) has passed. Otherwise, schedule the next frame and cancel the current update code.
+    requestAnimationFrame(endGame)
+    return
+}
+lastTimestamp = timestamp
+
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
 
+
+
   if (gameController.loser.animator.timepassed < gameController.loser.animator.duration && !(gameController.deathIsFinished)) {
-    gameController.loser.animator.timepassed += timestamp
+    gameController.loser.animator.timepassed += timestep
+  } else {
+    gameController.deathIsFinished = true
+    gameController.loser.animator.timepassed = gameController.loser.animator.duration
   }
 
-  let frame = Math.floor(gameController.loser.animator.maxFrames * gameController.loser.animator.timepassed / gameController.loser.animator.duration)
 
+
+  let frame = Math.floor(gameController.loser.animator.maxFrames * gameController.loser.animator.timepassed / gameController.loser.animator.duration) 
+ 
+  console.log(frame)
+  
   ctx.drawImage(gameController.loser.animator.spriteSheet,
     frame * gameController.loser.animator.frameWidth, 0,
     gameController.loser.animator.frameWidth, gameController.loser.animator.height,
