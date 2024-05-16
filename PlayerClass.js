@@ -52,7 +52,7 @@ class Player {
         y: this.position.y
       },
       width: 34,
-      height: 20
+      height: 60
     }
 
     if (

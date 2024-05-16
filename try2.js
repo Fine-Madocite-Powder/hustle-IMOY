@@ -7,7 +7,7 @@ const AttackAudio = document.getElementById('AttackAudio')
 const VictoryAudio = document.getElementById('Victory')
 VictoryAudio.loop = false
 
-const Gameaudio = document.getElementById('GameAudio');
+const Gameaudio = document.getElementById('GameAudio')
 window.onload = function() {
   Gameaudio.play()
   Gameaudio.volume = 0.3
@@ -15,7 +15,7 @@ window.onload = function() {
 
 
 if(!(ctx instanceof CanvasRenderingContext2D)) {
-  throw new Error("Could not get canvas rendering context");
+  throw new Error("Could not get canvas rendering context")
 }
 
 let players= []
