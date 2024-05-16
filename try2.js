@@ -8,17 +8,8 @@ const VictoryAudio = document.getElementById('Victory')
 VictoryAudio.loop = false
 
 const Gameaudio = document.getElementById('GameAudio')
-window.onload = function() {
-  Gameaudio.play()
-  Gameaudio.volume = 0.3
-}
 
-
-if(!(ctx instanceof CanvasRenderingContext2D)) {
-  throw new Error("Could not get canvas rendering context")
-}
-
-let players= []
+let players = []
 
 Animations = { // Data used in rendering and creating anim objects.
   run: {
@@ -50,6 +41,11 @@ Animations = { // Data used in rendering and creating anim objects.
     width: 34,
     height: 32,
     maxFrames: 8
+  },
+  shield: {
+    width: 36,
+    height: 32,
+    maxFrames: 3
   }
 }
 
@@ -57,7 +53,8 @@ const controls = {
   left: ["KeyA", "ArrowLeft"],
   right: ["KeyD", "ArrowRight"],
   jump: ["KeyW", "ArrowUp"],
-  attack: ["KeyF", "Slash"]
+  attack: ["KeyF", "Slash"],
+  shield: ["KeyE", "ShiftRight"]
 }
 
 let lastTimestamp = 0,
@@ -123,6 +120,8 @@ let assetLoader = new AssetLoader([
 "Red/groundedAttackRight.png",
 "Red/groundedAttackLeft.png",
 "Red/runRight.png",
+"Red/shieldLeft.png",
+"Red/shieldRight.png",
 
 "RedMod/deathLeft.png",
 "RedMod/groundedAttackLeft.png",
@@ -133,7 +132,9 @@ let assetLoader = new AssetLoader([
 "RedMod/jumpLeft.png", 
 "RedMod/jumpRight.png", 
 "RedMod/runLeft.png", 
-"RedMod/runRight.png"
+"RedMod/runRight.png",
+"RedMod/shieldLeft.png",
+"RedMod/shieldRight.png"
 ])
 
 function startGame() {
@@ -152,11 +153,8 @@ function startGame() {
 }
 
 
-assetLoader.load().then(() => {
-  startGame()
-  // After having loaded all images, put them into the assetLoader library and run the game
-})
-
+assetLoader.load().then(startGame)
+// When all images have finished loading, run the startGame function, initializing players and update().
 
 
 function update(timestamp) {
@@ -181,12 +179,11 @@ function update(timestamp) {
       // If we are currently calculating for player 1 (index 0), the statement will evaluate to falsy.
 
 
-        // These three lines store the commands that the player currently considered has entered. 
-        // The controls object is defined at the top. 
-      
+      // These three lines store the commands that the player currently considered has entered. 
+      // The controls object is defined at the top. 
       let effectiveCommands = {}
       for (const command in controls) {
-        if ( keys[  controls[command] [players.indexOf(player)]  ]) effectiveCommands[command] = true
+        if ( keys[  controls[command][i]  ] ) effectiveCommands[command] = true
       }
 
           /// PHYSICS AND FOUNDATIONAL LOGIC ///
@@ -194,7 +191,7 @@ function update(timestamp) {
 
     player.position.x += player.velocity.x;
     player.position.y -= player.velocity.y;
-    // Moves the player along its trajectory
+    // Moves the player along its trajectory. Positive y velocity moves us upward because we aren't brutes.
 
     if (player.position.y >= canvas.height) {
       player.position.y = canvas.height;
@@ -202,31 +199,43 @@ function update(timestamp) {
       player.doubleJump = true;
       // When the player is on the ground, keep it there and refresh the jump states.
     }
-    if (player.position.x < 0) player.position.x = 0;
-    if (player.position.x > canvas.width - player.animator.frameWidth) player.position.x = canvas.width - player.animator.frameWidth;
+    if (player.position.x < 0) {
+      player.position.x = 0;
+    }
+    if (player.position.x > canvas.width - player.animator.frameWidth) {
+      player.position.x = canvas.width - player.animator.frameWidth
+    }
 
 
-    if (player.stun <= 0) { // The player does not have control of their character while stunned/performing an attack.
+    if (player.stun <= 0) { // The player does not have control of their character while stunned or performing an attack. 
+      // Attacks that started before the player was stunend will still go through, although they can miss due to knockback.
       
       let AnimationName;
       let AnimationDuration = 1800;
 
+      if (effectiveCommands.left !== effectiveCommands.right) {
+        if (effectiveCommands.left) {
+          player.lookDirection = -1;
+        } else {
+          player.lookDirection = 1;
+        }
+      }
+      
       if (player.grounded) {
-        
-          if (effectiveCommands.left === effectiveCommands.right) {
-          player.velocity.x = 0;
-          AnimationName = "idle"
-        
-        } else if (effectiveCommands.left) {
-          player.velocity.x = -player.speed
-          player.lookDirection = -1
-          AnimationName = "run"
 
-        } else if (effectiveCommands.right) {
-          player.velocity.x = player.speed
-          player.lookDirection = 1
-          AnimationName = "run"
-        } // Could probably be moved to a method in the player class, ask Ray
+        if (effectiveCommands.left === effectiveCommands.right) {
+          player.velocity.x = 0;
+          AnimationName = "idle";
+        } else {
+          player.velocity.x = effectiveCommands.left ? -player.speed : player.speed;
+          AnimationName = "run";
+        }
+      }
+
+      if (effectiveCommands.shield) {
+        player.Shield()
+        AnimationDuration = 500
+        AnimationName = "shield"
       }
 
       if (effectiveCommands.jump) {
@@ -236,8 +245,8 @@ function update(timestamp) {
       }
 
       if (effectiveCommands.attack && player.grounded) { 
-        player.stun += 200;
-        AnimationDuration = 250
+        player.stun += 350 - 2 * timestep; // -timestep finns till för att förhindra en bug där första bilden i attacken visas i en frame 
+        AnimationDuration = 350
         AnimationName = "groundedAttack"
       }
 
@@ -306,7 +315,8 @@ function update(timestamp) {
 
 
 var gameController = {
-  loser: null
+  loser: null,
+  deathIsFinished: false
 }
 
 function endGame (timestamp) {
@@ -322,11 +332,11 @@ lastTimestamp = timestamp
 
 
 
-  if (gameController.loser.animator.timepassed < gameController.loser.animator.duration && !(gameController.deathIsFinished)) {
+  if (gameController.loser.animator.timepassed + timestep < gameController.loser.animator.duration && !(gameController.deathIsFinished)) {
     gameController.loser.animator.timepassed += timestep
   } else {
     gameController.deathIsFinished = true
-    gameController.loser.animator.timepassed = gameController.loser.animator.duration
+    gameController.loser.animator.timepassed = gameController.loser.animator.duration - 1
   }
 
 
