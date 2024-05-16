@@ -144,6 +144,9 @@ function startGame() {
   for (let player of players) {
     player.ChangeAnimation("jump", 1400);
   }
+  
+  Gameaudio.play()
+  Gameaudio.volume = 0.3
 
   requestAnimationFrame(update) 
 }
@@ -296,7 +299,7 @@ function update(timestamp) {
 
     keys = {}
     Gameaudio.pause()
-    VictoryAudio.play()
+    Gameaudio.currentTime = 0
 
   }
 }
@@ -330,19 +333,33 @@ lastTimestamp = timestamp
 
   let frame = Math.floor(gameController.loser.animator.maxFrames * gameController.loser.animator.timepassed / gameController.loser.animator.duration) 
  
-  console.log(gameController.loser.animator.timepassed)
+  console.log(frame)
   
   ctx.drawImage(gameController.loser.animator.spriteSheet,
-  frame * gameController.loser.animator.frameWidth, 0,
-  gameController.loser.animator.frameWidth, gameController.loser.animator.height,
-  gameController.loser.position.x, gameController.loser.position.y - gameController.loser.animator.height,
-  gameController.loser.animator.frameWidth, gameController.loser.animator.height,
+    frame * gameController.loser.animator.frameWidth, 0,
+    gameController.loser.animator.frameWidth, gameController.loser.animator.height,
+    gameController.loser.position.x, gameController.loser.position.y - gameController.loser.animator.height,
+    gameController.loser.animator.frameWidth, gameController.loser.animator.height,
   )
-  Gameaudio.pause()
-  VictoryAudio.play()
 
+  // If the victory audio hasn't been played yet and the loser's death animation has finished playing
+  if (!gameController.victoryAudioPlayed && gameController.loser.animator.timepassed >= gameController.loser.animator.duration) {
+    // Play the victory audio
+    VictoryAudio.play();
+    // Mark that the victory audio has been played
+    gameController.victoryAudioPlayed = true;
+  }
 
+  // Restart the game if Enter key is pressed
+  if (keys["Enter"]) {
+    // Reset the game state
+    gameController.victoryAudioPlayed = false;
+    VictoryAudio.pause()
+    VictoryAudio.currentTime = 0
+    startGame();
 
-  keys["Enter"] ? startGame() : requestAnimationFrame(endGame)
-
+  } else {
+    // Continue rendering the endGame screen
+    requestAnimationFrame(endGame);
+  }
 }
