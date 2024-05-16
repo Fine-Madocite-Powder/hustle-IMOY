@@ -1,54 +1,20 @@
-const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("GameCanvas");
 const ctx = canvas.getContext("2d");
 const background = new Image();
 background.src = "background.jpg"
 
 const AttackAudio = document.getElementById('AttackAudio')
+
 const VictoryAudio = document.getElementById('Victory')
 VictoryAudio.loop = false
 
 const Gameaudio = document.getElementById('GameAudio')
 
+let ScoreBoard = document.getElementById('ScoreBoard')
+
 let players = []
 
-Animations = { // Data used in rendering and creating anim objects.
-  run: {
-    width: 34,
-    height: 32,
-    maxFrames: 8
-  },
-  idle: {
-    width: 34,
-    height: 32,
-    maxFrames: 6
-  },
-  groundedAttack: {
-    width:34,
-    height: 32,
-    maxFrames: 8
-  },
-  jump: {
-    width:34,
-    height:32,
-    maxFrames: 8
-  },
-  groundedAttack: {
-    width: 34,
-    height: 32,
-    maxFrames: 3
-  },
-  death: {
-    width: 34,
-    height: 32,
-    maxFrames: 8
-  },
-  shield: {
-    width: 36,
-    height: 32,
-    maxFrames: 3
-  }
-}
-
+// This object contains the keybinds for different actions. Player 1 uses the first column of keybinds, player 2 the second.
 const controls = {
   left: ["KeyA", "ArrowLeft"],
   right: ["KeyD", "ArrowRight"],
@@ -148,6 +114,8 @@ function startGame() {
   
   Gameaudio.play()
   Gameaudio.volume = 0.3
+
+  gameController.UpdateScore(2)
 
   requestAnimationFrame(update) 
 }
@@ -306,6 +274,9 @@ function update(timestamp) {
 
     gameController.loser.ChangeAnimation("death", 3000)
 
+    gameController.UpdateScore(players.indexOf(gameController.loser))
+
+
     keys = {}
     Gameaudio.pause()
     Gameaudio.currentTime = 0
@@ -316,7 +287,14 @@ function update(timestamp) {
 
 var gameController = {
   loser: null,
-  deathIsFinished: false
+  deathIsFinished: false,
+
+  score: [0, 0],
+  UpdateScore(ID) {
+    this.score[ID]++
+
+    ScoreBoard.innerHTML = `${this.score[0]}  XXX  ${this.score[1]}`
+  }
 }
 
 function endGame (timestamp) {

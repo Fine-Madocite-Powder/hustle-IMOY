@@ -1,3 +1,42 @@
+const Animations = { // Data used in rendering and creating anim objects.
+  run: {
+    width: 34,
+    height: 32,
+    maxFrames: 8
+  },
+  idle: {
+    width: 34,
+    height: 32,
+    maxFrames: 6
+  },
+  groundedAttack: {
+    width:34,
+    height: 32,
+    maxFrames: 8
+  },
+  jump: {
+    width:34,
+    height:32,
+    maxFrames: 8
+  },
+  groundedAttack: {
+    width: 34,
+    height: 32,
+    maxFrames: 3
+  },
+  death: {
+    width: 34,
+    height: 32,
+    maxFrames: 8
+  },
+  shield: {
+    width: 36,
+    height: 32,
+    maxFrames: 3
+  }
+}
+
+
 class Anim {
   constructor(maxFrames, spriteSheet, duration, frameWidth, height, name) {
       this.frameWidth = frameWidth; 
