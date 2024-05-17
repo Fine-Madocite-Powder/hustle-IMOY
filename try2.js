@@ -280,6 +280,7 @@ function update(timestamp) {
     keys = {}
     Gameaudio.pause()
     Gameaudio.currentTime = 0
+    VictoryAudio.play()
 
   }
 }
@@ -288,6 +289,8 @@ function update(timestamp) {
 var gameController = {
   loser: null,
   deathIsFinished: false,
+  winner: null,
+  WinningFinished: false,
 
   score: [0, 0],
   UpdateScore(ID) {
@@ -308,32 +311,68 @@ lastTimestamp = timestamp
 
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
 
+// Determine the winner and loser
+if (players[0].health === 0) {
+  gameController.loser = players[0];
+  gameController.winner = players[1];
+} else {
+  gameController.loser = players[1];
+  gameController.winner = players[0];
+}
+
+gameController.loser.ChangeAnimation("death", 3000);
+gameController.winner.ChangeAnimation("idle", 3000);  // Ensure the winner has a victory animation
+
+gameController.UpdateScore(players.indexOf(gameController.loser));
 
 
-  if (gameController.loser.animator.timepassed + timestep < gameController.loser.animator.duration && !(gameController.deathIsFinished)) {
-    gameController.loser.animator.timepassed += timestep
-  } else {
-    gameController.deathIsFinished = true
-    gameController.loser.animator.timepassed = gameController.loser.animator.duration - 1
+  for (let player of players) {
+     if (player !== gameController.loser || !gameController.deathIsFinished) {
+      let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration);
+      ctx.drawImage(
+        player.animator.spriteSheet,
+        frame * player.animator.frameWidth, 0,
+        player.animator.frameWidth, player.animator.height,
+        player.position.x, player.position.y - player.animator.height,
+        player.animator.frameWidth, player.animator.height
+      );
+    }
   }
 
+  if (gameController.loser.animator.timepassed + timestep < gameController.loser.animator.duration && !gameController.deathIsFinished) {
+    gameController.loser.animator.timepassed += timestep;
+  } else {
+    gameController.deathIsFinished = true;
+    gameController.loser.animator.timepassed = gameController.loser.animator.duration - 1;
+  }
 
+  if (gameController.winner.animator.timepassed + timestep < gameController.winner.animator.duration && !gameController.deathIsFinished) {
+    gameController.winner.animator.timepassed += timestep;
+  } else {
+    gameController.deathIsFinished = true;
+    gameController.winner.animator.timepassed = gameController.winner.animator.duration - 1;
+  }
 
-  let frame = Math.floor(gameController.loser.animator.maxFrames * gameController.loser.animator.timepassed / gameController.loser.animator.duration) 
- 
-  console.log(frame)
-  
-  ctx.drawImage(gameController.loser.animator.spriteSheet,
-    frame * gameController.loser.animator.frameWidth, 0,
+  let loserFrame = Math.floor(gameController.loser.animator.maxFrames * gameController.loser.animator.timepassed / gameController.loser.animator.duration);
+  ctx.drawImage(
+    gameController.loser.animator.spriteSheet,
+    loserFrame * gameController.loser.animator.frameWidth, 0,
     gameController.loser.animator.frameWidth, gameController.loser.animator.height,
     gameController.loser.position.x, gameController.loser.position.y - gameController.loser.animator.height,
-    gameController.loser.animator.frameWidth, gameController.loser.animator.height,
-  )
+    gameController.loser.animator.frameWidth, gameController.loser.animator.height
+  );
+
+  let winnerFrame = Math.floor(gameController.winner.animator.maxFrames * gameController.winner.animator.timepassed / gameController.winner.animator.duration);
+  ctx.drawImage(
+    gameController.winner.animator.spriteSheet,
+    winnerFrame * gameController.winner.animator.frameWidth, 0,
+    gameController.winner.animator.frameWidth, gameController.winner.animator.height,
+    gameController.winner.position.x, gameController.winner.position.y - gameController.winner.animator.height,
+    gameController.winner.animator.frameWidth, gameController.winner.animator.height
+  );
 
   // If the victory audio hasn't been played yet and the loser's death animation has finished playing
   if (!gameController.victoryAudioPlayed && gameController.loser.animator.timepassed >= gameController.loser.animator.duration) {
-    // Play the victory audio
-    VictoryAudio.play();
     // Mark that the victory audio has been played
     gameController.victoryAudioPlayed = true;
   }
@@ -343,7 +382,6 @@ lastTimestamp = timestamp
     // Reset the game state
     gameController.victoryAudioPlayed = false;
     VictoryAudio.pause()
-    VictoryAudio.currentTime = 0
     startGame();
 
   } else {
