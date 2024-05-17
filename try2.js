@@ -354,8 +354,6 @@ function endGame (timestamp) {
 
     frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) 
   
-    console.log(player.animator.timepassed)
-
     ctx.drawImage(player.animator.spriteSheet,
       frame * player.animator.frameWidth, 0,
       player.animator.frameWidth, player.animator.height,
