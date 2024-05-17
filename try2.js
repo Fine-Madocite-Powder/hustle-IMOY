@@ -367,7 +367,6 @@ function endGame (timestamp) {
   // Restart the game if Enter key is pressed
   if (keys["Enter"]) {
     // Reset the game state
-    gameController.victoryAudioPlayed = false;
     VictoryAudio.pause()
     VictoryAudio.currentTime = 0
     startGame();
