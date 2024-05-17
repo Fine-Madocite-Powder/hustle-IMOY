@@ -32,7 +32,7 @@ const Animations = { // Data used in rendering and creating anim objects.
   shield: {
     width: 36,
     height: 32,
-    maxFrames: 3
+    maxFrames: 4 // Shield has an extra empty frame. When the player enters this frame, their animation changes to idle before rendering.
   }
 }
 
@@ -41,8 +41,8 @@ class Anim {
   constructor(maxFrames, spriteSheet, duration, frameWidth, height, name) {
       this.frameWidth = frameWidth; 
       this.name = name;   // As spritesheets seemingly cannot be compared (tried "if (spriteSheet1 !== spriteSheet")"),
-                          // the name variable will instead be used to make sure the timepassed variable below is not re-set
-                          // to 0 each time the updater judges that the animation should continue playing.
+                          // the 'name' variable will instead be used to make sure the timepassed variable below is not re-set
+                          // to 0 each time the Player.ChangeAnimation function judges that the animation should continue playing.
       this.height = height;
       this.maxFrames = maxFrames;
       this.spriteSheet = spriteSheet;

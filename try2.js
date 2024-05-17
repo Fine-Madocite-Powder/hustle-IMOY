@@ -16,17 +16,21 @@ let players = []
 
 // This object contains the keybinds for different actions. Player 1 uses the first column of keybinds, player 2 the second.
 const controls = {
-  left: ["KeyA", "ArrowLeft"],
-  right: ["KeyD", "ArrowRight"],
-  jump: ["KeyW", "ArrowUp"],
-  attack: ["KeyF", "Slash"],
-  shield: ["KeyE", "ShiftRight"]
+  left: ["ArrowLeft", "KeyA"],
+  right: ["ArrowRight", "KeyD"],
+  jump: ["ArrowUp", "KeyW"],
+  attack: ["Slash", "KeyF"],
+  shield: ["ShiftRight", "KeyE"]
 }
 
 let lastTimestamp = 0,
 maxFPS = 30,
 timestep = 1000 / maxFPS // ms for each frame
 const gravityForce = 1 //Gravity so the player falls smoothly//
+
+let loserIndex = null,
+  deathIsFinished = false,
+  score = [0, 0]
 
 let keys = { }
 
@@ -39,7 +43,8 @@ window.addEventListener("keyup", (event) => {
 
   keys[event.code] = false
 
-}) 
+})
+  
 
 
 class AssetLoader {
@@ -103,10 +108,16 @@ let assetLoader = new AssetLoader([
 "RedMod/shieldRight.png"
 ])
 
+function UpdateScore(ID) {
+  score[ID]++
+
+  ScoreBoard.innerHTML = `${score[0]}  XXX  ${score[1]}`
+}
+
 function startGame() {
   players = [
-  new Player(50, 50, assetLoader, "Red"), 
-  new Player(200, 50, assetLoader, "RedMod")]
+  new Player(canvas.width - 84, 50, assetLoader, "Red"), 
+  new Player(50, 50, assetLoader, "RedMod")]
 
   for (let player of players) {
     player.ChangeAnimation("jump", 1400);
@@ -115,7 +126,8 @@ function startGame() {
   Gameaudio.play()
   Gameaudio.volume = 0.3
 
-  gameController.UpdateScore(2)
+  deathIsFinished = false
+  UpdateScore(2) // UpdateScore(2) updates the text inside the <p> element without changing the score, as there is no third player
 
   requestAnimationFrame(update) 
 }
@@ -135,17 +147,34 @@ function update(timestamp) {
       return
   }
   lastTimestamp = timestamp
+
+
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
   
+  ctx.fillStyle = "black"
+  ctx.fillRect(0, canvas.height - 40, canvas.width, 40)
 
   for (let i = 0; i < players.length; i++) {
     
       // Defining both players
       let player = players[i];
       let otherPlayer;
-      otherPlayer = players.indexOf(player) ? players[0] : players[1]
+      otherPlayer = (i) ? players[0] : players[1]
       // If we are currently calculating for player 1 (index 0), the statement will evaluate to falsy.
 
+      // Drawing each player's health bar
+      for (let j = 0; j < player.health; j++) {
+
+        // Reminder: i = players.indexOf(player), from player's declaration
+        let xFlip;
+        if (i) { // When drawing player 2's health bar, draw from right to left. For player 1, do the opposite.
+          xFlip = -1
+        } else {
+          xFlip = 1
+        }
+        ctx.fillStyle = "red"
+        ctx.fillRect(canvas.width * i + (xFlip * j * 21), canvas.height - 35, 20 * xFlip, 30) // Leaves 1 pixel of space between each red bar
+      }
 
       // These three lines store the commands that the player currently considered has entered. 
       // The controls object is defined at the top. 
@@ -161,8 +190,8 @@ function update(timestamp) {
     player.position.y -= player.velocity.y;
     // Moves the player along its trajectory. Positive y velocity moves us upward because we aren't brutes.
 
-    if (player.position.y >= canvas.height) {
-      player.position.y = canvas.height;
+    if (player.position.y >= canvas.height - 40) {
+      player.position.y = canvas.height - 40;
       player.grounded = true;
       player.doubleJump = true;
       // When the player is on the ground, keep it there and refresh the jump states.
@@ -198,12 +227,12 @@ function update(timestamp) {
           player.velocity.x = effectiveCommands.left ? -player.speed : player.speed;
           AnimationName = "run";
         }
-      }
 
-      if (effectiveCommands.shield) {
-        player.Shield()
-        AnimationDuration = 500
-        AnimationName = "shield"
+        if (effectiveCommands.shield && player.shieldUp) {
+          player.Shield()
+          AnimationDuration = 500
+          AnimationName = "shield"
+        }
       }
 
       if (effectiveCommands.jump) {
@@ -230,21 +259,19 @@ function update(timestamp) {
       player.animator.timepassed = 0;
     }
     let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) 
-    // this line calculates the frame index player is currently at.
     
-    if (frame === 1 && player.attackReady)
+    if (frame === 3 && player.animator.name.slice(0, 6) === "shield") { // If the shield move has finished, the player goes back into idle.
+      player.shieldUp = false;
+      player.ChangeAnimation("idle", 1800)
+    }
 
+    if (frame === 1 && player.attackReady)
       switch (player.animator.name) {
         case "groundedAttackRight":
         case "groundedAttackLeft":
           player.GroundedAttack(otherPlayer);
-          player.attackReady = false
+          player.attackReady = false;
           break;
-        
-        case "airAttackRight":
-        case "airAttackLeft":
-        break;
-
         default:
         break;
       }
@@ -257,9 +284,10 @@ function update(timestamp) {
       player.position.x, player.position.y - player.animator.height,
       player.animator.frameWidth, player.animator.height,
     );
-    
-
+  
   }
+
+  
 
   if (players[1].health > 0 && players[0].health > 0) {
     requestAnimationFrame(update)
@@ -267,14 +295,17 @@ function update(timestamp) {
 
     requestAnimationFrame(endGame)
     if (players[0].health === 0) {
-      gameController.loser = players[0]
+      loserIndex = 0
     } else {
-      gameController.loser = players[1]
+      loserIndex = 1
     }
 
-    gameController.loser.ChangeAnimation("death", 3000)
+    players[loserIndex].ChangeAnimation("death", 3000)
 
-    gameController.UpdateScore(players.indexOf(gameController.loser))
+    const winnerIndex = loserIndex === 0 ? 1 : 0
+    players[winnerIndex].ChangeAnimation("jump", 1000) 
+
+    UpdateScore(loserIndex) // Adds 1 to the winner.
 
 
     keys = {}
@@ -286,102 +317,61 @@ function update(timestamp) {
 }
 
 
-var gameController = {
-  loser: null,
-  deathIsFinished: false,
-  winner: null,
-  WinningFinished: false,
-
-  score: [0, 0],
-  UpdateScore(ID) {
-    this.score[ID]++
-
-    ScoreBoard.innerHTML = `${this.score[0]}  XXX  ${this.score[1]}`
-  }
-}
-
 function endGame (timestamp) {
 
   if (timestamp - lastTimestamp < timestep) {
-    // Only continue if one timestep (1000/15 ms) has passed. Otherwise, schedule the next frame and cancel the current update code.
+    // Only continue if one timestep (1000/15 ms) has passed. Otherwise, schedule the next frame and cancel the current endGame code.
     requestAnimationFrame(endGame)
     return
-}
-lastTimestamp = timestamp
+  }
+  lastTimestamp = timestamp 
 
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
 
-// Determine the winner and loser
-if (players[0].health === 0) {
-  gameController.loser = players[0];
-  gameController.winner = players[1];
-} else {
-  gameController.loser = players[1];
-  gameController.winner = players[0];
-}
+  ctx.fillRect(0, canvas.height - 40, canvas.width, 40)
 
-gameController.loser.ChangeAnimation("death", 3000);
-gameController.winner.ChangeAnimation("idle", 3000);  // Ensure the winner has a victory animation
+  for (let i = 0; i < players.length; i++) {
+    const player = players[i]
 
-gameController.UpdateScore(players.indexOf(gameController.loser));
+    if (player.position.y < canvas.height - 40) player.position.y++
 
+    if (i === loserIndex) {
 
-  for (let player of players) {
-     if (player !== gameController.loser || !gameController.deathIsFinished) {
-      let frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration);
-      ctx.drawImage(
-        player.animator.spriteSheet,
-        frame * player.animator.frameWidth, 0,
-        player.animator.frameWidth, player.animator.height,
-        player.position.x, player.position.y - player.animator.height,
-        player.animator.frameWidth, player.animator.height
-      );
+      if (player.animator.timepassed + timestep < player.animator.duration && !(deathIsFinished)) {
+        player.animator.timepassed += timestep
+      } else {
+        deathIsFinished = true
+        player.animator.timepassed = player.animator.duration - 1
+      }
+    } else {
+      player.animator.timepassed += timestep
+
+      if (player.animator.timepassed > player.animator.duration) {
+        player.animator.timepassed = 0;
+      }
     }
+
+
+    frame = Math.floor(player.animator.maxFrames * player.animator.timepassed / player.animator.duration) 
+  
+    console.log(player.animator.timepassed)
+
+    ctx.drawImage(player.animator.spriteSheet,
+      frame * player.animator.frameWidth, 0,
+      player.animator.frameWidth, player.animator.height,
+      player.position.x, player.position.y - player.animator.height,
+      player.animator.frameWidth, player.animator.height,
+    )
+
   }
 
-  if (gameController.loser.animator.timepassed + timestep < gameController.loser.animator.duration && !gameController.deathIsFinished) {
-    gameController.loser.animator.timepassed += timestep;
-  } else {
-    gameController.deathIsFinished = true;
-    gameController.loser.animator.timepassed = gameController.loser.animator.duration - 1;
-  }
-
-  if (gameController.winner.animator.timepassed + timestep < gameController.winner.animator.duration && !gameController.deathIsFinished) {
-    gameController.winner.animator.timepassed += timestep;
-  } else {
-    gameController.deathIsFinished = true;
-    gameController.winner.animator.timepassed = gameController.winner.animator.duration - 1;
-  }
-
-  let loserFrame = Math.floor(gameController.loser.animator.maxFrames * gameController.loser.animator.timepassed / gameController.loser.animator.duration);
-  ctx.drawImage(
-    gameController.loser.animator.spriteSheet,
-    loserFrame * gameController.loser.animator.frameWidth, 0,
-    gameController.loser.animator.frameWidth, gameController.loser.animator.height,
-    gameController.loser.position.x, gameController.loser.position.y - gameController.loser.animator.height,
-    gameController.loser.animator.frameWidth, gameController.loser.animator.height
-  );
-
-  let winnerFrame = Math.floor(gameController.winner.animator.maxFrames * gameController.winner.animator.timepassed / gameController.winner.animator.duration);
-  ctx.drawImage(
-    gameController.winner.animator.spriteSheet,
-    winnerFrame * gameController.winner.animator.frameWidth, 0,
-    gameController.winner.animator.frameWidth, gameController.winner.animator.height,
-    gameController.winner.position.x, gameController.winner.position.y - gameController.winner.animator.height,
-    gameController.winner.animator.frameWidth, gameController.winner.animator.height
-  );
-
-  // If the victory audio hasn't been played yet and the loser's death animation has finished playing
-  if (!gameController.victoryAudioPlayed && gameController.loser.animator.timepassed >= gameController.loser.animator.duration) {
-    // Mark that the victory audio has been played
-    gameController.victoryAudioPlayed = true;
-  }
 
   // Restart the game if Enter key is pressed
   if (keys["Enter"]) {
     // Reset the game state
     gameController.victoryAudioPlayed = false;
     VictoryAudio.pause()
+    VictoryAudio.currentTime = 0
     startGame();
 
   } else {

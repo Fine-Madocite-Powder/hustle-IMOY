@@ -51,7 +51,7 @@ class Player {
 
   GroundedAttack(otherPlayer) {
 
-    if(otherPlayer.animator.name === "shieldLeft" || otherPlayer.animator.name === "shieldRight") return 
+    if(otherPlayer.animator.name.slice(0, 6) === "shield") return // If the other player is in its shieldRight or shieldLeft animation, the attack doesnt hit.
     
 
     this.attackReady = false
@@ -83,13 +83,11 @@ class Player {
       otherPlayer.velocity.y = 8;
       otherPlayer.velocity.x = 3 * this.lookDirection
       otherPlayer.health -= 1
+      
+      otherPlayer.shieldUp = true // The only way to regenerate shield is to get hit. Shields are only consumed when a player holds the button for too long.
+      // This is to prevent players from holding it down all the time, only stopping whenever their opponent is recovering from an attack.
     }
   }
-
-  TakeDamage(dmg) {
-    this.health -= dmg
-  }
-
 
   ChangeAnimation(animationName, AnimationDuration) {
 
