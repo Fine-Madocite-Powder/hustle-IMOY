@@ -16,11 +16,11 @@ let players = []
 
 // This object contains the keybinds for different actions. Player 1 uses the first column of keybinds, player 2 the second.
 const controls = {
-  left: ["ArrowLeft", "KeyA"],
-  right: ["ArrowRight", "KeyD"],
-  jump: ["ArrowUp", "KeyW"],
-  attack: ["Slash", "KeyF"],
-  shield: ["ShiftRight", "KeyE"]
+  left: ["KeyA", "ArrowLeft"],
+  right: ["KeyD", "ArrowRight"],
+  jump: ["KeyW", "ArrowUp"],
+  attack: ["KeyF", "Slash"],
+  shield: ["KeyE", "ShiftRight"]
 }
 
 let lastTimestamp = 0,
@@ -81,6 +81,7 @@ class AssetLoader {
 
 let assetLoader = new AssetLoader([
 "background.jpg", 
+
 "Red/deathLeft.png",
 "Red/deathRight.png", 
 "Red/idleLeft.png", 
@@ -111,13 +112,14 @@ let assetLoader = new AssetLoader([
 function UpdateScore(ID) {
   score[ID]++
 
-  ScoreBoard.innerHTML = `${score[0]}  XXX  ${score[1]}`
+  ScoreBoard.innerHTML = `${score[1]}  XXX  ${score[0]}`
 }
 
 function startGame() {
   players = [
-  new Player(canvas.width - 84, 50, assetLoader, "Red"), 
-  new Player(50, 50, assetLoader, "RedMod")]
+  new Player(50, 50, assetLoader, "RedMod"),
+  new Player(canvas.width - 84, 50, assetLoader, "Red")]
+
 
   for (let player of players) {
     player.ChangeAnimation("jump", 1400);
@@ -148,7 +150,6 @@ function update(timestamp) {
   }
   lastTimestamp = timestamp
 
-
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height); // Refreshes the canvas.
   
   ctx.fillStyle = "black"
@@ -162,6 +163,8 @@ function update(timestamp) {
       otherPlayer = (i) ? players[0] : players[1]
       // If we are currently calculating for player 1 (index 0), the statement will evaluate to falsy.
 
+      console.log(players[0].position.x)
+
       // Drawing each player's health bar
       for (let j = 0; j < player.health; j++) {
 
@@ -172,12 +175,14 @@ function update(timestamp) {
         } else {
           xFlip = 1
         }
+
         ctx.fillStyle = "red"
-        ctx.fillRect(canvas.width * i + (xFlip * j * 21), canvas.height - 35, 20 * xFlip, 30) // Leaves 1 pixel of space between each red bar
+        ctx.fillRect(canvas.width * i + (xFlip * j * 21), canvas.height - 35, 20 * xFlip, 30) // Le aves 1 pixel of space between each red bar
       }
 
       // These three lines store the commands that the player currently considered has entered. 
       // The controls object is defined at the top. 
+      
       let effectiveCommands = {}
       for (const command in controls) {
         if ( keys[  controls[command][i]  ] ) effectiveCommands[command] = true
@@ -367,6 +372,7 @@ function endGame (timestamp) {
   // Restart the game if Enter key is pressed
   if (keys["Enter"]) {
     // Reset the game state
+    
     VictoryAudio.pause()
     VictoryAudio.currentTime = 0
     startGame();

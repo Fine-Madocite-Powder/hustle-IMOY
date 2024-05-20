@@ -1,7 +1,10 @@
 class Player {
+
   constructor(x, y, assetLoader, color) {
-    this.color = color
+
+    this.color = color;
     this.assetLoader = assetLoader;
+
 
     this.health = 8;
     this.speed = 4;
@@ -10,12 +13,14 @@ class Player {
       height: 32,
     }
 
+    
     this.attackReady = true;
     this.shieldUp = true;
     this.grounded = false;
     this.doubleJump = true;
     this.stun = 0; // Prevents the player from entering other commands while attacking or immediately after being struck by an attack. 
     
+
     this.velocity = { // The x and y coordinates below determine the direction the player will be displaced each frame. 
       x: 0,
       y: 0
@@ -24,7 +29,7 @@ class Player {
       x: x, // The position is at the bottom left of the player's sprite (at least, that's where it will be rendered from)
       y: y // The starting position of each player is determined by the respective parameters when the objects are created.
     }
-    this.lookDirection = 1; // 1 is right, -1 is left. Probably will be used for the flipping of hitboxes.
+    this.lookDirection = 1; // 1 is right, -1 is left. Used for the flipping of hitboxes.
 
       
     this.animator = new Anim(null, null, null, null, null, null)
@@ -43,10 +48,6 @@ class Player {
 
       this.doubleJump = false;
     }
-  }
-
-  Shield() {
-
   }
 
   GroundedAttack(otherPlayer) {
@@ -96,7 +97,9 @@ class Player {
       
     this.animator = new Anim(
       Animations[animationName].maxFrames,
+
       this.assetLoader.getImage(`${this.color}/${animationName}${(this.lookDirection === 1) ? "Right" : "Left"}.png`),
+
       AnimationDuration, 
       Animations[animationName].width, 
       Animations[animationName].height, 
